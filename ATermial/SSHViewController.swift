@@ -9,7 +9,7 @@
 import UIKit
 import NMSSH
 
-class ViewController: UIViewController {
+class SSHViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
