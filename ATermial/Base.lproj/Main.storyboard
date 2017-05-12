@@ -9,24 +9,82 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Host Table View Controller-->
+        <scene sceneID="TSs-Mf-S1t">
+            <objects>
+                <tableViewController id="OtL-M2-8lu" customClass="HostTableViewController" customModule="ATermial" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="weU-K0-9xw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="hostCell" textLabel="vJ2-Pt-Nvl" style="IBUITableViewCellStyleDefault" id="chf-g3-Fxi">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="chf-g3-Fxi" id="vtc-PH-xHt">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vJ2-Pt-Nvl">
+                                            <rect key="frame" x="15" y="0.0" width="345" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="OtL-M2-8lu" id="JNs-n7-5d9"/>
+                            <outlet property="delegate" destination="OtL-M2-8lu" id="6b0-Ct-inf"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="4QH-Cp-xUb">
+                        <barButtonItem key="leftBarButtonItem" title="+" id="3BJ-UN-hJZ"/>
+                        <barButtonItem key="rightBarButtonItem" title="Quick Connect" id="8vn-zZ-hRT">
+                            <connections>
+                                <action selector="quickConnect:" destination="OtL-M2-8lu" id="8GV-he-Gel"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="f7r-B2-1wT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1081" y="-547"/>
+        </scene>
+        <!--Delegate-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="SSHViewController" customModule="ATermial" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SSHView" id="BYZ-38-t0r" customClass="SSHViewController" customModule="ATermial" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="UITextView">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <connections>
+                            <outlet property="delegate" destination="BYZ-38-t0r" id="W83-Mo-DVD"/>
+                        </connections>
                     </view>
-                    <navigationItem key="navigationItem" id="mev-gG-x54"/>
+                    <navigationItem key="navigationItem" id="mev-gG-x54">
+                        <barButtonItem key="rightBarButtonItem" title="Disconnect" id="AXq-Jg-ZtV">
+                            <connections>
+                                <action selector="disconnect:" destination="BYZ-38-t0r" id="VC3-hI-edc"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="textView" destination="8bC-Xf-vdC" id="M0H-RR-JP7"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1076" y="133.5832083958021"/>
+            <point key="canvasLocation" x="1962" y="-552"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="pCf-zO-BED">
@@ -39,7 +97,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="NpA-Ef-9eK"/>
+                        <segue destination="OtL-M2-8lu" kind="relationship" relationship="rootViewController" id="TBf-Pw-GCX"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wrH-fq-MX1" userLabel="First Responder" sceneMemberID="firstResponder"/>

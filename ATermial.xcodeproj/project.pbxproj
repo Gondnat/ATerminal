@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1FEB9A4C15A180DBCBF50759 /* Pods_ATermial.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CA5463E5A08732A6277D7DC /* Pods_ATermial.framework */; };
+		4C2ADDE91EC3F7D7005432E9 /* HostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2ADDE81EC3F7D7005432E9 /* HostTableViewController.swift */; };
 		4CA124AC1EC335D300BD26B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA124AB1EC335D300BD26B1 /* AppDelegate.swift */; };
 		4CA124AE1EC335D300BD26B1 /* SSHViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA124AD1EC335D300BD26B1 /* SSHViewController.swift */; };
 		4CA124B11EC335D300BD26B1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CA124AF1EC335D300BD26B1 /* Main.storyboard */; };
@@ -17,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		1CA5463E5A08732A6277D7DC /* Pods_ATermial.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ATermial.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C2ADDE81EC3F7D7005432E9 /* HostTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostTableViewController.swift; sourceTree = "<group>"; };
 		4CA124A81EC335D300BD26B1 /* ATermial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ATermial.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CA124AB1EC335D300BD26B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4CA124AD1EC335D300BD26B1 /* SSHViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHViewController.swift; sourceTree = "<group>"; };
@@ -67,6 +69,7 @@
 				4CA124B21EC335D300BD26B1 /* Assets.xcassets */,
 				4CA124B41EC335D300BD26B1 /* LaunchScreen.storyboard */,
 				4CA124B71EC335D300BD26B1 /* Info.plist */,
+				4C2ADDE81EC3F7D7005432E9 /* HostTableViewController.swift */,
 			);
 			path = ATermial;
 			sourceTree = "<group>";
@@ -212,6 +215,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C2ADDE91EC3F7D7005432E9 /* HostTableViewController.swift in Sources */,
 				4CA124AE1EC335D300BD26B1 /* SSHViewController.swift in Sources */,
 				4CA124AC1EC335D300BD26B1 /* AppDelegate.swift in Sources */,
 			);
