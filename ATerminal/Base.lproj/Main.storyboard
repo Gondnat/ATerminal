@@ -6,13 +6,14 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Host Table View Controller-->
         <scene sceneID="TSs-Mf-S1t">
             <objects>
-                <tableViewController id="OtL-M2-8lu" customClass="HostTableViewController" customModule="ATermial" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="OtL-M2-8lu" customClass="HostTableViewController" customModule="ATerminal" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="weU-K0-9xw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -22,11 +23,11 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="chf-g3-Fxi" id="vtc-PH-xHt">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vJ2-Pt-Nvl">
-                                            <rect key="frame" x="15" y="0.0" width="345" height="43"/>
+                                            <rect key="frame" x="16" y="0.0" width="344" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -43,22 +44,43 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="4QH-Cp-xUb">
-                        <barButtonItem key="leftBarButtonItem" title="+" id="3BJ-UN-hJZ"/>
-                        <barButtonItem key="rightBarButtonItem" title="Quick Connect" id="8vn-zZ-hRT">
-                            <connections>
-                                <action selector="quickConnect:" destination="OtL-M2-8lu" id="8GV-he-Gel"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="leftBarButtonItem" systemItem="bookmarks" id="LBI-UZ-bjS"/>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="3BJ-UN-hJZ"/>
+                            <barButtonItem title="Quick Connect" id="8vn-zZ-hRT">
+                                <connections>
+                                    <action selector="quickConnect:" destination="OtL-M2-8lu" id="8GV-he-Gel"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f7r-B2-1wT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1081" y="-547"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="nAh-Gc-M1Y">
+            <objects>
+                <viewController id="FPQ-Km-ejA" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="2Yh-Ga-fJc"/>
+                        <viewControllerLayoutGuide type="bottom" id="1GK-vr-V8o"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="IEI-Ge-jdu">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Nr4-cN-XKv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="779" y="126"/>
+        </scene>
         <!--Delegate-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="SSHView" id="BYZ-38-t0r" customClass="SSHViewController" customModule="ATermial" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SSHView" id="BYZ-38-t0r" customClass="SSHViewController" customModule="ATerminal" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -91,9 +113,11 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="GcY-m7-uWV" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="fPf-lN-T4i">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="fPf-lN-T4i">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        <color key="barTintColor" red="0.093547225391300087" green="0.33589605437665782" blue="0.33215813679803685" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
