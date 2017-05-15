@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SideMenu
 
 struct SSHServer {
     var host:String!
@@ -15,16 +16,47 @@ struct SSHServer {
     
 }
 
-class HostTableViewController:  UITableViewController {
+class HostTableViewController:  UITableViewController, UIViewControllerTransitioningDelegate {
+    
+    var menuAnimator:MenuTransitionAnimator!
+    
     lazy var sshServers = [SSHServer]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         sshServers.append(SSHServer(host: "192.168.8.100", user: "odie", passwd: "d"))
+        menuAnimator = MenuTransitionAnimator(mode: .presentation, shouldPassEventsOutsideMenu: false) { [unowned self] in
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showMenu" {
+            let menu = segue.destination as! MenuViewController
+            menu.transitioningDelegate = self
+            menu.modalPresentationStyle = .custom
+        }
+    }
+    
+    // MARK: UIViewControllerTransitioningDelegate
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        if ((dismissed as? MenuViewController) != nil) {
+            return MenuTransitionAnimator(mode: .dismissal)
+        }
+        return nil
+    }
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        if ((presented as? MenuViewController) != nil) {
+            return menuAnimator
+        }
+        return nil
+    }
+    
+    // MARK: IBAction
 
     @IBAction func quickConnect(_ sender: UIBarButtonItem) {
         let hostAddress = UIAlertController(title: "Connect to SSH", message: "Please input host address and port", preferredStyle: UIAlertControllerStyle.alert)

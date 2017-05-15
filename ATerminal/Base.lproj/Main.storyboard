@@ -6,6 +6,8 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -27,7 +29,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vJ2-Pt-Nvl">
-                                            <rect key="frame" x="16" y="0.0" width="344" height="43.5"/>
+                                            <rect key="frame" x="15" y="0.0" width="345" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -44,7 +46,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="4QH-Cp-xUb">
-                        <barButtonItem key="leftBarButtonItem" systemItem="bookmarks" id="LBI-UZ-bjS"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="bookmarks" id="LBI-UZ-bjS">
+                            <connections>
+                                <segue destination="FPQ-Km-ejA" kind="presentation" identifier="showMenu" id="e6X-Qo-g5N"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
                             <barButtonItem systemItem="add" id="3BJ-UN-hJZ"/>
                             <barButtonItem title="Quick Connect" id="8vn-zZ-hRT">
@@ -59,23 +65,68 @@
             </objects>
             <point key="canvasLocation" x="1081" y="-547"/>
         </scene>
-        <!--View Controller-->
+        <!--Menu View Controller-->
         <scene sceneID="nAh-Gc-M1Y">
             <objects>
-                <viewController id="FPQ-Km-ejA" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="currentContext" id="FPQ-Km-ejA" customClass="MenuViewController" customModule="ATerminal" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2Yh-Ga-fJc"/>
                         <viewControllerLayoutGuide type="bottom" id="1GK-vr-V8o"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="IEI-Ge-jdu">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="100" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jQY-LZ-MDC">
+                                <rect key="frame" x="16" y="8" width="68" height="68"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="jQY-LZ-MDC" secondAttribute="height" id="92A-qX-xg6"/>
+                                </constraints>
+                                <state key="normal" title="CopyRight" image="exit"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qaV-5e-39d">
+                                <rect key="frame" x="16" y="76" width="68" height="68"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="qaV-5e-39d" secondAttribute="height" id="ZlM-Q4-Dva"/>
+                                </constraints>
+                                <state key="normal" title="Button" image="copyright"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ohK-fW-vqw">
+                                <rect key="frame" x="0.0" y="144" width="100" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="ohK-fW-vqw" secondAttribute="height" id="8tJ-q3-LVG"/>
+                                </constraints>
+                                <state key="normal" title="Button" image="server"/>
+                            </button>
+                        </subviews>
+                        <color key="tintColor" red="0.093547225390000002" green="0.33589605439999998" blue="0.3321581368" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="jQY-LZ-MDC" secondAttribute="trailing" id="510-Yc-N6Y"/>
+                            <constraint firstItem="jQY-LZ-MDC" firstAttribute="top" secondItem="2Yh-Ga-fJc" secondAttribute="bottom" constant="8" symbolic="YES" id="Hx0-Da-BcV"/>
+                            <constraint firstItem="ohK-fW-vqw" firstAttribute="width" secondItem="ohK-fW-vqw" secondAttribute="height" id="KWP-4G-9fS"/>
+                            <constraint firstItem="jQY-LZ-MDC" firstAttribute="leading" secondItem="IEI-Ge-jdu" secondAttribute="leadingMargin" id="UO6-nc-th3"/>
+                            <constraint firstItem="ohK-fW-vqw" firstAttribute="top" secondItem="qaV-5e-39d" secondAttribute="bottom" id="bRX-Q4-uBl"/>
+                            <constraint firstItem="qaV-5e-39d" firstAttribute="leading" secondItem="IEI-Ge-jdu" secondAttribute="leadingMargin" id="hDz-wE-gVf"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="qaV-5e-39d" secondAttribute="trailing" id="kAz-Er-L19"/>
+                            <constraint firstItem="ohK-fW-vqw" firstAttribute="leading" secondItem="IEI-Ge-jdu" secondAttribute="leading" id="on1-w5-PIa"/>
+                            <constraint firstItem="qaV-5e-39d" firstAttribute="top" secondItem="jQY-LZ-MDC" secondAttribute="bottom" id="xDt-h2-TSD"/>
+                            <constraint firstAttribute="trailing" secondItem="ohK-fW-vqw" secondAttribute="trailing" id="zxV-9n-0mp"/>
+                        </constraints>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="100" height="667"/>
+                    <connections>
+                        <outlet property="copyRight" destination="qaV-5e-39d" id="jsu-Zm-cvJ"/>
+                        <outlet property="exit" destination="jQY-LZ-MDC" id="zZl-Fi-dLT"/>
+                        <outlet property="host" destination="ohK-fW-vqw" id="J9F-Yh-0pw"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nr4-cN-XKv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="779" y="126"/>
+            <point key="canvasLocation" x="629.60000000000002" y="186.65667166416793"/>
         </scene>
         <!--Delegate-->
         <scene sceneID="tne-QT-ifu">
@@ -129,4 +180,9 @@
             <point key="canvasLocation" x="136.80000000000001" y="-550.07496251874068"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="copyright" width="512" height="512"/>
+        <image name="exit" width="206" height="206"/>
+        <image name="server" width="512" height="512"/>
+    </resources>
 </document>

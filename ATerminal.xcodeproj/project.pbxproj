@@ -13,6 +13,7 @@
 		4C0755FE1EC550080036E063 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C0755F61EC550080036E063 /* Main.storyboard */; };
 		4C0755FF1EC550080036E063 /* HostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0755F81EC550080036E063 /* HostTableViewController.swift */; };
 		4C0756011EC550080036E063 /* SSHViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0755FA1EC550080036E063 /* SSHViewController.swift */; };
+		4C7FDB821EC989FD00144DA1 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7FDB811EC989FD00144DA1 /* MenuViewController.swift */; };
 		828F91E777BD059937804898 /* Pods_ATerminal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CE041476A3E6805D1FE584C /* Pods_ATerminal.framework */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +27,7 @@
 		4C0755F81EC550080036E063 /* HostTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostTableViewController.swift; sourceTree = "<group>"; };
 		4C0755F91EC550080036E063 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C0755FA1EC550080036E063 /* SSHViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHViewController.swift; sourceTree = "<group>"; };
+		4C7FDB811EC989FD00144DA1 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		4CA124A81EC335D300BD26B1 /* ATerminal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ATerminal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CE041476A3E6805D1FE584C /* Pods_ATerminal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ATerminal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -52,6 +54,7 @@
 				4C0755F81EC550080036E063 /* HostTableViewController.swift */,
 				4C0755F91EC550080036E063 /* Info.plist */,
 				4C0755FA1EC550080036E063 /* SSHViewController.swift */,
+				4C7FDB811EC989FD00144DA1 /* MenuViewController.swift */,
 			);
 			path = ATerminal;
 			sourceTree = SOURCE_ROOT;
@@ -218,6 +221,7 @@
 				4C0755FB1EC550080036E063 /* AppDelegate.swift in Sources */,
 				4C0756011EC550080036E063 /* SSHViewController.swift in Sources */,
 				4C0755FF1EC550080036E063 /* HostTableViewController.swift in Sources */,
+				4C7FDB821EC989FD00144DA1 /* MenuViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

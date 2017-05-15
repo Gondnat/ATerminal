@@ -6,6 +6,6 @@ target 'ATerminal' do
   use_frameworks!
 
   pod 'NMSSH'
-  # Pods for ATerminal
+  pod 'YALSideMenu', '~> 2.0'
 
 end
