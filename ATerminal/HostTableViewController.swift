@@ -34,26 +34,7 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showMenu" {
-            let menu = segue.destination as! MenuViewController
-            menu.transitioningDelegate = self
-            menu.modalPresentationStyle = .custom
-        }
-    }
-    
-    // MARK: UIViewControllerTransitioningDelegate
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        if ((dismissed as? MenuViewController) != nil) {
-            return MenuTransitionAnimator(mode: .dismissal)
-        }
-        return nil
-    }
-    
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        if ((presented as? MenuViewController) != nil) {
-            return menuAnimator
-        }
-        return nil
+
     }
     
     // MARK: IBAction
