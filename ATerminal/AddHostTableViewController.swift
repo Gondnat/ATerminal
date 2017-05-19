@@ -8,11 +8,61 @@
 
 import UIKit
 
+enum CELLTYPE:Int {
+    case name = 0
+    case IP, user, passwd
+
+    func labelText() -> String {
+        switch self {
+        case .name:
+            return "Name"
+        case .IP:
+            return "IP Address"
+        case .user:
+            return "User Name"
+        case .passwd:
+            return "Password"
+        }
+    }
+    func keyboardType() ->  UIKeyboardType{
+        switch self {
+        case .name:
+            return .asciiCapable
+        case .IP:
+            return .numbersAndPunctuation
+        case .user:
+            return .alphabet
+        case .passwd:
+            return .alphabet
+        }
+    }
+    func returnKeyType() -> UIReturnKeyType {
+        switch self {
+        case .name, .IP, .user:
+            return .next
+        case .passwd:
+            return .done
+        }
+    }
+    func placeholder() -> String {
+        switch self {
+        case .name:
+            return "Alias"
+        case .IP:
+            return "EXP: 192.168.1.1:22"
+        case .user:
+            return "Login user name"
+        case .passwd:
+            return ""
+        }
+    }
+
+}
 class AddHostTableViewController: UITableViewController{
     
     @IBOutlet weak var navigationBar: UINavigationBar!
-    var tableLabelList: [String] {
-        return ["Name","IP Address", "Port", "User", "Password"]
+    var tableLabelList: [CELLTYPE] {
+        return [.name, .IP, .user, .passwd]
     }
     
     func setStatusBarColor(color:UIColor) {
@@ -23,7 +73,7 @@ class AddHostTableViewController: UITableViewController{
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        setStatusBarColor(color: navigationBar.barTintColor!)
+        self.tableView.tableFooterView = UIView()
 
         // Do any additional setup after loading the view.
     }
@@ -38,7 +88,26 @@ class AddHostTableViewController: UITableViewController{
     }
     
     @IBAction func save(_ sender: Any) {
+        var serverInfo = SSHServer()
+        for var i in 0..<tableLabelList.count {
+            if let cell = self.tableView.cellForRow(at: IndexPath(row: i, section: 0)) as? LabelAndTextTableViewCell {
+                if let cellType = CELLTYPE(rawValue: cell.tag) {
+                    switch cellType {
+                    case CELLTYPE.name:
+                        serverInfo.alias = cell.textField.text
+                    case CELLTYPE.IP:
+                        serverInfo.host = cell.textField.text
+                    case CELLTYPE.user:
+                        serverInfo.user = cell.textField.text
+                    case CELLTYPE.passwd:
+                        serverInfo.passwd = cell.textField.text
+                    }
+                }
+            }
+            
+        }
     }
+
 //    override var prefersStatusBarHidden: Bool {
 //        return true
 //    }
@@ -62,7 +131,13 @@ class AddHostTableViewController: UITableViewController{
         if nil == cell {
             cell = LabelAndTextTableViewCell()
         }
-        cell?.label.text = tableLabelList[indexPath.row]
+        let cellInfo = tableLabelList[indexPath.row]
+        cell?.tag = cellInfo.rawValue
+        cell?.label.text = cellInfo.labelText()
+        cell?.textField.keyboardType = cellInfo.keyboardType()
+        cell?.textField.returnKeyType = cellInfo.returnKeyType()
+        cell?.textField.placeholder = cellInfo.placeholder()
+        cell?.selectionStyle = .none
         return cell!
     }
 }

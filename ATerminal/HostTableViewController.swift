@@ -7,27 +7,24 @@
 //
 
 import UIKit
-import SideMenu
 
 struct SSHServer {
     var host:String!
     var user:String!
     var passwd:String!
-    
+    var alias:String?
+
 }
 
 class HostTableViewController:  UITableViewController, UIViewControllerTransitioningDelegate {
     
-    var menuAnimator:MenuTransitionAnimator!
     
     lazy var sshServers = [SSHServer]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        sshServers.append(SSHServer(host: "192.168.8.100", user: "odie", passwd: "d"))
-        menuAnimator = MenuTransitionAnimator(mode: .presentation, shouldPassEventsOutsideMenu: false) { [unowned self] in
-            self.dismiss(animated: true, completion: nil)
-        }
+        self.tableView.tableFooterView = UIView()
+        sshServers.append(SSHServer(host: "192.168.2.4", user: "odie", passwd: "d", alias: "odiecloud"))
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
