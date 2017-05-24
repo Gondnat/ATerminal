@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 struct SSHServer {
     var host:String!
@@ -16,16 +17,33 @@ struct SSHServer {
 
 }
 
-class HostTableViewController:  UITableViewController, UIViewControllerTransitioningDelegate {
+class HostTableViewController:  UITableViewController, UIViewControllerTransitioningDelegate,  NSFetchedResultsControllerDelegate {
+
+    var userChangeTheTable:Bool = false
     
-    
-    lazy var sshServers = [SSHServer]()
-    
+
+    static private let persistentContainer: NSPersistentContainer = {
+        return (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer
+    }()!
+
+    private lazy var fetchedResultsController:NSFetchedResultsController = { () -> NSFetchedResultsController<Server> in
+        let request:NSFetchRequest<Server> = Server.fetchRequest()
+        let nameSort = NSSortDescriptor(key: "name", ascending: true)
+        request.sortDescriptors = [nameSort]
+        let moc = persistentContainer.viewContext
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController.delegate = self
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            fatalError("Failed to initialize FetchedResultsController: \(error)")
+        }
+        return fetchedResultsController
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.tableFooterView = UIView()
-        sshServers.append(SSHServer(host: "192.168.2.4", user: "odie", passwd: "d", alias: "odiecloud"))
-        NotificationCenter.default.addObserver(self, selector: #selector(addNewSSHServer(_:)), name: .AddNewServer, object: nil)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -33,16 +51,6 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
-    }
-
-    // MARK: Notification method
-    @objc func addNewSSHServer(_ notification:Notification) {
-        if let newServer = notification.object as? SSHServer {
-            if !newServer.host.isEmpty {
-                sshServers.append(newServer)
-                tableView.reloadData()
-            }
-        }
     }
 
     // MARK: IBAction
@@ -83,23 +91,31 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
     }
 
     // MARK: tableview datasource
+
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return fetchedResultsController.sections!.count
+    }
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sshServers.count
+//        return sshServers.count
+        guard let sections = fetchedResultsController.sections else {
+            fatalError("No sections in fetchedResultsController")
+        }
+        let sectionInfo = sections[section]
+        return sectionInfo.numberOfObjects
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "hostCell")
-        if nil != cell {
-            if indexPath.row < sshServers.count {
-                let host = sshServers[indexPath.row]
-                if !(host.alias?.isEmpty)!{
-                    cell?.textLabel?.text = host.alias
-                } else {
-                    cell?.textLabel?.text = String(format: "%@@%@", host.user, host.host)
-                }
-            }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "hostCell") else {
+            fatalError("Wrong cell type dequeued")
         }
-        return cell!
+        let object = self.fetchedResultsController.object(at: indexPath)
+        if !(object.name?.isEmpty)!{
+            cell.textLabel?.text = object.name
+        } else {
+            cell.textLabel?.text = String(format: "%@@%@", object.username!, object.hostname!)
+        }
+        return cell
     }
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -109,19 +125,26 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         switch editingStyle {
         case .delete:
-            sshServers.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .left)
-        case .insert: break
-        default: break
+//            userChangeTheTable = true
+//            tableView.beginUpdates()
+//            tableView.deleteRows(at: [indexPath], with: .left)
+//            tableView.endUpdates()
+            let context = HostTableViewController.persistentContainer.viewContext
+            context.delete(fetchedResultsController.object(at: indexPath))
+            do {
+                try context.save()
+            } catch {
+                fatalError("Failure to save context:\(error)")
+            }
+        default:
+            break
         }
     }
 
     // MARK: tableview delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row < sshServers.count {
-            let sshServer = sshServers[indexPath.row]
-            showSSHView(host: sshServer.host, username: sshServer.user, passwd: sshServer.passwd)
-        }
+        let sshServer = fetchedResultsController.object(at: indexPath)
+        showSSHView(host: sshServer.hostname!, username: sshServer.username!, passwd: sshServer.password!)
     }
 
 
@@ -135,5 +158,54 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
             self.tableView.reloadData()
             self.navigationController?.pushViewController(SSHVC, animated: true)
         }
+    }
+
+
+    // MARK: NSFetchedResultsControllerDelegate
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        if userChangeTheTable {
+            return
+        }
+        tableView.beginUpdates()
+    }
+
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        if userChangeTheTable {
+            return
+        }
+        switch type {
+        case .insert:
+            tableView.insertSections(IndexSet(integer: sectionIndex), with: .right)
+        case .delete:
+            tableView.deleteSections(IndexSet(integer: sectionIndex), with: .left)
+        case .move:
+            break
+        case .update:
+            break
+        }
+    }
+
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        if userChangeTheTable {
+            return
+        }
+        switch type {
+        case .insert:
+            tableView.insertRows(at: [newIndexPath!], with: .right)
+        case .delete:
+            tableView.deleteRows(at: [indexPath!], with: .left)
+        case .update:
+            tableView.reloadRows(at: [indexPath!], with: .fade)
+        case .move:
+            tableView.moveRow(at: indexPath!, to: newIndexPath!)
+        }
+    }
+
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        if userChangeTheTable {
+            userChangeTheTable = false
+            return
+        }
+        tableView.endUpdates()
     }
 }

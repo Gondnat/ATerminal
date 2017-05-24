@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 enum CELLTYPE:Int {
     case name = 0
@@ -94,24 +95,29 @@ class AddHostTableViewController: UITableViewController{
     }
     
     @IBAction func save(_ sender: Any) {
-        var newServerInfo = SSHServer()
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let newServer = NSEntityDescription.insertNewObject(forEntityName: "Server", into: context) as! Server
         for var i in 0..<tableLabelList.count {
             if let cell = self.tableView.cellForRow(at: IndexPath(row: i, section: 0)) as? LabelAndTextTableViewCell {
                 if let cellType = CELLTYPE(rawValue: cell.tag) {
                     switch cellType {
                     case CELLTYPE.name:
-                        newServerInfo.alias = cell.textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                        newServer.name = cell.textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     case CELLTYPE.IP:
-                        newServerInfo.host = cell.textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                        newServer.hostname = cell.textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     case CELLTYPE.user:
-                        newServerInfo.user = cell.textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                        newServer.username = cell.textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     case CELLTYPE.passwd:
-                        newServerInfo.passwd = cell.textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                        newServer.password = cell.textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     }
                 }
             }
         }
-        NotificationCenter.default.post(name: .AddNewServer, object: newServerInfo)
+        do {
+            try context.save()
+        } catch {
+            fatalError("Failure to save context:\(error)")
+        }
         self.dismiss(animated: true, completion: nil)
     }
 
