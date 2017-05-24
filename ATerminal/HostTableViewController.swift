@@ -25,6 +25,7 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
         super.viewDidLoad()
         self.tableView.tableFooterView = UIView()
         sshServers.append(SSHServer(host: "192.168.2.4", user: "odie", passwd: "d", alias: "odiecloud"))
+        NotificationCenter.default.addObserver(self, selector: #selector(addNewSSHServer(_:)), name: .AddNewServer, object: nil)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -33,7 +34,17 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
     }
-    
+
+    // MARK: Notification method
+    @objc func addNewSSHServer(_ notification:Notification) {
+        if let newServer = notification.object as? SSHServer {
+            if !newServer.host.isEmpty {
+                sshServers.append(newServer)
+                tableView.reloadData()
+            }
+        }
+    }
+
     // MARK: IBAction
 
     @IBAction func quickConnect(_ sender: UIBarButtonItem) {
@@ -66,20 +77,45 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
         hostAddress.addAction(cancel)
         self.present(hostAddress, animated: true, completion: nil)
     }
+
+    override func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        return "Delete"
+    }
+
     // MARK: tableview datasource
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sshServers.count
     }
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "hostCell")
         if nil != cell {
             if indexPath.row < sshServers.count {
                 let host = sshServers[indexPath.row]
-                cell?.textLabel?.text = String(format: "%@@%@", host.user, host.host)
+                if !(host.alias?.isEmpty)!{
+                    cell?.textLabel?.text = host.alias
+                } else {
+                    cell?.textLabel?.text = String(format: "%@@%@", host.user, host.host)
+                }
             }
         }
         return cell!
     }
+
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        switch editingStyle {
+        case .delete:
+            sshServers.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .left)
+        case .insert: break
+        default: break
+        }
+    }
+
     // MARK: tableview delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row < sshServers.count {
@@ -87,7 +123,10 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
             showSSHView(host: sshServer.host, username: sshServer.user, passwd: sshServer.passwd)
         }
     }
-    
+
+
+
+    // MARK: show terminal view
     func showSSHView(host:String, username:String, passwd:String) {
         if let SSHVC = self.storyboard?.instantiateViewController(withIdentifier: "SSHView") as? SSHViewController {
             SSHVC.host = host

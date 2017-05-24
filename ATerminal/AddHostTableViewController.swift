@@ -58,9 +58,15 @@ enum CELLTYPE:Int {
     }
 
 }
+
+extension Notification.Name {
+    public static let AddNewServer = NSNotification.Name("com.thnuth.hostTableViewController.addNewServer")
+
+}
+
 class AddHostTableViewController: UITableViewController{
-    
-    @IBOutlet weak var navigationBar: UINavigationBar!
+
+
     var tableLabelList: [CELLTYPE] {
         return [.name, .IP, .user, .passwd]
     }
@@ -88,24 +94,25 @@ class AddHostTableViewController: UITableViewController{
     }
     
     @IBAction func save(_ sender: Any) {
-        var serverInfo = SSHServer()
+        var newServerInfo = SSHServer()
         for var i in 0..<tableLabelList.count {
             if let cell = self.tableView.cellForRow(at: IndexPath(row: i, section: 0)) as? LabelAndTextTableViewCell {
                 if let cellType = CELLTYPE(rawValue: cell.tag) {
                     switch cellType {
                     case CELLTYPE.name:
-                        serverInfo.alias = cell.textField.text
+                        newServerInfo.alias = cell.textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     case CELLTYPE.IP:
-                        serverInfo.host = cell.textField.text
+                        newServerInfo.host = cell.textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     case CELLTYPE.user:
-                        serverInfo.user = cell.textField.text
+                        newServerInfo.user = cell.textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     case CELLTYPE.passwd:
-                        serverInfo.passwd = cell.textField.text
+                        newServerInfo.passwd = cell.textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     }
                 }
             }
-            
         }
+        NotificationCenter.default.post(name: .AddNewServer, object: newServerInfo)
+        self.dismiss(animated: true, completion: nil)
     }
 
 //    override var prefersStatusBarHidden: Bool {
