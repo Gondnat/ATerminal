@@ -32,19 +32,22 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.session = NMSSHSession.connect(toHost: self.host, withUsername: self.user)
-        self.session.delegate = self
+        session = NMSSHSession(host: host, andUsername: user)
+//        session = NMSSHSession.connect(toHost: host, withUsername: user)
+        session.delegate = self
+
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         // keyboard notification
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
         
         
         queue.async {
+            self.session.connect(withTimeout: 2)
             if self.session.isConnected {
                 if !self.passwd.isEmpty{
                     self.session.authenticate(byPassword: self.passwd)
@@ -89,7 +92,9 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
     // MARK: IBAction
     @IBAction func disconnect(_ sender: UIBarButtonItem) {
         queue.async {
-            self.session.disconnect()
+            if self.session.isConnected {
+                self.session.disconnect()
+            }
         }
     }
     
