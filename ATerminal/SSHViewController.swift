@@ -11,7 +11,9 @@ import NMSSH
 
 class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDelegate, NMSSHChannelDelegate {
     @IBOutlet var textView: UITextView!
-    
+
+
+
     private var lastCommand:String = ""
     private var lastLinePrefix:String = "~$"
     
@@ -27,8 +29,10 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
     public var user:String!
     public var passwd:String!
     
-    
-    
+    var isConnected: Bool {
+        return session.isConnected
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -47,14 +51,19 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
         
         
         queue.async {
-            self.session.connect(withTimeout: 2)
+            if self.session.isConnected && self.session.isAuthorized {
+                return
+            }
+            if !self.session.isConnected {
+                self.session.connect(withTimeout: 2)
+            }
             if self.session.isConnected {
                 if !self.passwd.isEmpty{
                     self.session.authenticate(byPassword: self.passwd)
                 } else {
                     self.session.authenticateByKeyboardInteractive()
                 }
-                
+
                 if !self.session.isAuthorized {
                     DispatchQueue.main.async(execute: {
                         self.append("Authentication error")

@@ -38,12 +38,13 @@ enum CELLTYPE:Int {
         }
     }
     func returnKeyType() -> UIReturnKeyType {
-        switch self {
-        case .name, .IP, .user:
-            return .next
-        case .passwd:
-            return .done
-        }
+//        switch self {
+//        case .name, .IP, .user:
+//            return .next
+//        case .passwd:
+//            return .done
+//        }
+        return .done
     }
     func placeholder() -> String {
         switch self {
@@ -97,7 +98,7 @@ class AddHostTableViewController: UITableViewController{
     @IBAction func save(_ sender: Any) {
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         let newServer = NSEntityDescription.insertNewObject(forEntityName: "Server", into: context) as! Server
-        for var i in 0..<tableLabelList.count {
+        for  i in 0..<tableLabelList.count {
             if let cell = self.tableView.cellForRow(at: IndexPath(row: i, section: 0)) as? LabelAndTextTableViewCell {
                 if let cellType = CELLTYPE(rawValue: cell.tag) {
                     switch cellType {
@@ -113,6 +114,7 @@ class AddHostTableViewController: UITableViewController{
                 }
             }
         }
+        newServer.addtime = Int64(time(nil))
         do {
             try context.save()
         } catch {

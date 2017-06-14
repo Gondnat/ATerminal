@@ -9,17 +9,18 @@
 import UIKit
 import CoreData
 
-struct SSHServer {
-    var host:String!
-    var user:String!
-    var passwd:String!
-    var alias:String?
-
-}
+//struct SSHServer {
+//    var host:String!
+//    var user:String!
+//    var passwd:String!
+//    var alias:String?
+//
+//}
 
 class HostTableViewController:  UITableViewController, UIViewControllerTransitioningDelegate,  NSFetchedResultsControllerDelegate {
 
-    var userChangeTheTable:Bool = false
+    private var userChangeTheTable:Bool = false
+    private var activeSSHVC = [Int64:SSHViewController]()
     
 
     static private let persistentContainer: NSPersistentContainer = {
@@ -28,7 +29,7 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
 
     private lazy var fetchedResultsController:NSFetchedResultsController = { () -> NSFetchedResultsController<Server> in
         let request:NSFetchRequest<Server> = Server.fetchRequest()
-        let nameSort = NSSortDescriptor(key: "name", ascending: true)
+        let nameSort = NSSortDescriptor(key: "addtime", ascending: true)
         request.sortDescriptors = [nameSort]
         let moc = persistentContainer.viewContext
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
@@ -115,9 +116,11 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
         } else {
             cell.textLabel?.text = String(format: "%@@%@", object.username!, object.hostname!)
         }
+        cell.detailTextLabel?.text = "OnLine"
         return cell
     }
 
+    // swipe action
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
@@ -140,62 +143,82 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
     // MARK: tableview delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let sshServer = fetchedResultsController.object(at: indexPath)
-        showSSHView(host: sshServer.hostname!, username: sshServer.username!, passwd: sshServer.password!)
+        if let SSHVC = activeSSHVC[sshServer.addtime] {
+            self.navigationController?.pushViewController(SSHVC, animated: true)
+        } else {
+            let SSHVC = showSSHView(host: sshServer.hostname!, username: sshServer.username!, passwd: sshServer.password!)
+            activeSSHVC[sshServer.addtime] = SSHVC
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let sshServer = fetchedResultsController.object(at: indexPath)
+        if let SSHVC = activeSSHVC[sshServer.addtime] {
+            if SSHVC.isConnected {
+                cell.detailTextLabel?.backgroundColor = UIColor.green
+            } else {
+                cell.detailTextLabel?.backgroundColor = UIColor.orange
+            }
+        } else {
+            cell.detailTextLabel?.backgroundColor = UIColor.orange
+        }
     }
 
     // MARK: show terminal view
-    func showSSHView(host:String, username:String, passwd:String) {
-        if let SSHVC = self.storyboard?.instantiateViewController(withIdentifier: "SSHView") as? SSHViewController {
-            if username.isEmpty {
-                let loginAlert = UIAlertController(title: "Login", message: "Connect to \"\(host)\"", preferredStyle: .alert)
-                loginAlert.addTextField { (user:UITextField) in
-                    user.returnKeyType = .next
-                    user.keyboardType = .asciiCapable
-                    user.placeholder = "User name"
-                }
-                loginAlert.addTextField { (passwd:UITextField) in
-                    passwd.returnKeyType = .go
-                    passwd.keyboardType = .asciiCapable
-                    passwd.placeholder = "Password"
-                }
-                let connect = UIAlertAction(title: "Connect", style: UIAlertActionStyle.default) { (UIAlertAction) in
-                    guard let textFields = loginAlert.textFields else {
-                        fatalError("No textFields")
-                    }
-                    self.showSSHView(host: host, username: textFields[0].text!, passwd: textFields[1].text!)
-                }
-                let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (UIAlertAction) in
-                }
-                loginAlert.addAction(connect)
-                loginAlert.addAction(cancel)
-                self.present(loginAlert, animated: true, completion: nil)
-
-            } else if passwd.isEmpty {
-                    let loginAlert = UIAlertController(title: "Password", message: "Please input password for \"\(username)\"", preferredStyle: .alert)
-                    loginAlert.addTextField { (passwd:UITextField) in
-                        passwd.returnKeyType = .go
-                        passwd.keyboardType = .asciiCapable
-                        passwd.placeholder = "Password"
-                    }
-                    let connect = UIAlertAction(title: "Connect", style: UIAlertActionStyle.default) { (UIAlertAction) in
-                        guard let textFields = loginAlert.textFields else {
-                            fatalError("No textFields")
-                        }
-                        self.showSSHView(host: host, username: username, passwd: textFields[0].text!)
-                    }
-                    let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (UIAlertAction) in
-                    }
-                    loginAlert.addAction(connect)
-                    loginAlert.addAction(cancel)
-                    self.present(loginAlert, animated: true, completion: nil)
-            } else {
-                SSHVC.host = host
-                SSHVC.user = username
-                SSHVC.passwd = passwd
-                self.tableView.reloadData()
-                self.navigationController?.pushViewController(SSHVC, animated: true)
-            }
+    func showSSHView(host:String, username:String, passwd:String) -> SSHViewController {
+        guard var SSHVC = self.storyboard?.instantiateViewController(withIdentifier: "SSHView") as? SSHViewController else {
+            fatalError()
         }
+        if username.isEmpty {
+            let loginAlert = UIAlertController(title: "Login", message: "Connect to \"\(host)\"", preferredStyle: .alert)
+            loginAlert.addTextField { (user:UITextField) in
+                user.returnKeyType = .next
+                user.keyboardType = .asciiCapable
+                user.placeholder = "User name"
+            }
+            loginAlert.addTextField { (passwd:UITextField) in
+                passwd.returnKeyType = .go
+                passwd.keyboardType = .asciiCapable
+                passwd.placeholder = "Password"
+            }
+            let connect = UIAlertAction(title: "Connect", style: UIAlertActionStyle.default) { (UIAlertAction) in
+                guard let textFields = loginAlert.textFields else {
+                    fatalError("No textFields")
+                }
+                SSHVC = self.showSSHView(host: host, username: textFields[0].text!, passwd: textFields[1].text!)
+            }
+            let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (UIAlertAction) in
+            }
+            loginAlert.addAction(connect)
+            loginAlert.addAction(cancel)
+            self.present(loginAlert, animated: true, completion: nil)
+
+        } else if passwd.isEmpty {
+            let loginAlert = UIAlertController(title: "Password", message: "Please input password for \"\(username)\"", preferredStyle: .alert)
+            loginAlert.addTextField { (passwd:UITextField) in
+                passwd.returnKeyType = .go
+                passwd.keyboardType = .asciiCapable
+                passwd.placeholder = "Password"
+            }
+            let connect = UIAlertAction(title: "Connect", style: UIAlertActionStyle.default) { (UIAlertAction) in
+                guard let textFields = loginAlert.textFields else {
+                    fatalError("No textFields")
+                }
+                SSHVC = self.showSSHView(host: host, username: username, passwd: textFields[0].text!)
+            }
+            let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (UIAlertAction) in
+            }
+            loginAlert.addAction(connect)
+            loginAlert.addAction(cancel)
+            self.present(loginAlert, animated: true, completion: nil)
+        } else {
+            SSHVC.host = host
+            SSHVC.user = username
+            SSHVC.passwd = passwd
+            self.tableView.reloadData()
+            self.navigationController?.pushViewController(SSHVC, animated: true)
+        }
+        return SSHVC
     }
 
 
