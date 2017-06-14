@@ -46,6 +46,11 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
         super.viewDidLoad()
         self.tableView.tableFooterView = UIView()
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tableView.reloadData()
+    }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
@@ -78,7 +83,7 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
             guard let textFields = loginHostAlert.textFields else {
                 fatalError("No textFields")
             }
-            self.showSSHView(host: textFields[0].text!, username: textFields[1].text!, passwd: textFields[2].text!)
+            self.showSSHView(host: textFields[0].text!, username: textFields[1].text!, passwd: textFields[2].text!, time: -1)
         }
         let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (UIAlertAction) in
         }
@@ -107,16 +112,25 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "hostCell") else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "hostCell") as? HostNameAndStatusTableViewCell else {
             fatalError("Wrong cell type dequeued")
         }
         let object = self.fetchedResultsController.object(at: indexPath)
         if !(object.name?.isEmpty)!{
-            cell.textLabel?.text = object.name
+            cell.name?.text = object.name
         } else {
-            cell.textLabel?.text = String(format: "%@@%@", object.username!, object.hostname!)
+            cell.name?.text = String(format: "%@@%@", object.username!, object.hostname!)
         }
-        cell.detailTextLabel?.text = "OnLine"
+
+        let sshServer = fetchedResultsController.object(at: indexPath)
+        if let SSHVC = activeSSHVC[sshServer.addtime] {
+            if SSHVC.isConnected {
+                cell.statusImage.image = UIImage(named: "onLine")
+            } else {
+                cell.statusImage.image = UIImage(named: "offLine")
+            }
+        }
+
         return cell
     }
 
@@ -146,29 +160,13 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
         if let SSHVC = activeSSHVC[sshServer.addtime] {
             self.navigationController?.pushViewController(SSHVC, animated: true)
         } else {
-            let SSHVC = showSSHView(host: sshServer.hostname!, username: sshServer.username!, passwd: sshServer.password!)
-            activeSSHVC[sshServer.addtime] = SSHVC
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let sshServer = fetchedResultsController.object(at: indexPath)
-        if let SSHVC = activeSSHVC[sshServer.addtime] {
-            if SSHVC.isConnected {
-                cell.detailTextLabel?.backgroundColor = UIColor.green
-            } else {
-                cell.detailTextLabel?.backgroundColor = UIColor.orange
-            }
-        } else {
-            cell.detailTextLabel?.backgroundColor = UIColor.orange
+            showSSHView(host: sshServer.hostname!, username: sshServer.username ?? "", passwd: sshServer.password ?? "", time: sshServer.addtime)
         }
     }
 
     // MARK: show terminal view
-    func showSSHView(host:String, username:String, passwd:String) -> SSHViewController {
-        guard var SSHVC = self.storyboard?.instantiateViewController(withIdentifier: "SSHView") as? SSHViewController else {
-            fatalError()
-        }
+    func showSSHView(host:String, username:String, passwd:String, time:Int64 = -1){
+        let SSHVC = self.storyboard?.instantiateViewController(withIdentifier: "SSHView") as? SSHViewController
         if username.isEmpty {
             let loginAlert = UIAlertController(title: "Login", message: "Connect to \"\(host)\"", preferredStyle: .alert)
             loginAlert.addTextField { (user:UITextField) in
@@ -185,7 +183,7 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
                 guard let textFields = loginAlert.textFields else {
                     fatalError("No textFields")
                 }
-                SSHVC = self.showSSHView(host: host, username: textFields[0].text!, passwd: textFields[1].text!)
+                self.showSSHView(host: host, username: textFields[0].text!, passwd: textFields[1].text!, time: time)
             }
             let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (UIAlertAction) in
             }
@@ -204,21 +202,23 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
                 guard let textFields = loginAlert.textFields else {
                     fatalError("No textFields")
                 }
-                SSHVC = self.showSSHView(host: host, username: username, passwd: textFields[0].text!)
+                self.showSSHView(host: host, username: username, passwd: textFields[0].text!, time: time)
             }
             let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (UIAlertAction) in
             }
             loginAlert.addAction(connect)
             loginAlert.addAction(cancel)
             self.present(loginAlert, animated: true, completion: nil)
-        } else {
-            SSHVC.host = host
-            SSHVC.user = username
-            SSHVC.passwd = passwd
+        } else if nil != SSHVC {
+            SSHVC?.host = host
+            SSHVC?.user = username
+            SSHVC?.passwd = passwd
             self.tableView.reloadData()
-            self.navigationController?.pushViewController(SSHVC, animated: true)
+            self.navigationController?.pushViewController(SSHVC!, animated: true)
+            if time != -1 {
+                activeSSHVC[time] = SSHVC
+            }
         }
-        return SSHVC
     }
 
 
