@@ -21,11 +21,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="hostCell" id="chf-g3-Fxi" customClass="HostNameAndStatusTableViewCell" customModule="ATerminal" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="hostCell" id="chf-g3-Fxi" customClass="HostNameAndStatusTableViewCell" customModule="ATerminal" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="chf-g3-Fxi" id="vtc-PH-xHt">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jtc-Zc-zR0">
@@ -208,7 +208,7 @@
         <scene sceneID="bOa-7B-A1A">
             <objects>
                 <tableViewController id="gzY-M4-7eC" customClass="AddHostTableViewController" customModule="ATerminal" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="8mJ-5f-rza">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="8mJ-5f-rza">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -380,7 +380,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="ipTextField" destination="kvh-FG-K6N" id="8U2-Vq-IuI"/>
+                        <outlet property="ipTextField" destination="bC1-wX-9oz" id="5Sb-y9-lD6"/>
                         <outlet property="nameTextField" destination="qcP-iu-MZn" id="QZt-79-Agx"/>
                         <outlet property="passwordTextField" destination="DZl-Wh-jdj" id="iPh-mC-DYM"/>
                         <outlet property="saveButton" destination="beB-Px-0Go" id="iiT-nC-rDU"/>

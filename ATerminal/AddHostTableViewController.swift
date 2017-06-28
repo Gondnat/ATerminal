@@ -14,7 +14,7 @@ class AddHostTableViewController: UITableViewController, UITextFieldDelegate{
     @IBOutlet weak var saveButton: UIBarButtonItem!
 
     @IBOutlet weak var nameTextField: UITextField!
-    @IBOutlet weak var ipTextField: UILabel!
+    @IBOutlet weak var ipTextField: UITextField!
     @IBOutlet weak var userNameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
 
