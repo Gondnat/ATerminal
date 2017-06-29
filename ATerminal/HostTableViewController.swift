@@ -45,6 +45,10 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.tableFooterView = UIView()
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(HostTableViewController.longPressAction(gesture:)))
+        longPressGesture.minimumPressDuration = 1.0
+        tableView.addGestureRecognizer(longPressGesture)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -56,10 +60,45 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-
+        if segue.identifier == "showServerSetting" && sender is UITableViewCell{
+            var serverSettingVC:ServerSettingTableViewController?
+            if segue.destination is UINavigationController {
+                serverSettingVC = (segue.destination as! UINavigationController).viewControllers[0] as? ServerSettingTableViewController
+            } else {
+                serverSettingVC = segue.destination as? ServerSettingTableViewController
+            }
+            guard let indexPath = tableView.indexPath(for:(sender as? UITableViewCell)!) else {
+                return
+            }
+            serverSettingVC?.server = self.fetchedResultsController.object(at:indexPath)
+        }
     }
 
-    // MARK: IBAction
+    // MARK: -
+    func longPressAction(gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
+            let point = gesture.location(in: tableView)
+            guard let indexPath = tableView.indexPathForRow(at: point) else {
+                return
+            }
+            let serverEditSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+            serverEditSheet.addAction(UIAlertAction(title: NSLocalizedString("Edit", comment: "edit server"), style: .default, handler: { (action:UIAlertAction) in
+                self.performSegue(withIdentifier: "showServerSetting", sender: self.tableView.cellForRow(at: indexPath))
+            }))
+
+            serverEditSheet.addAction(UIAlertAction(title: NSLocalizedString("Delete", comment: "delete server"), style: .default, handler: { (UIAlertAction) in
+                self.deleteServer(at: indexPath)
+            }))
+            serverEditSheet.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "cancel"), style: .cancel, handler: { (action:UIAlertAction) in
+                print("Cancel")
+            }))
+            self.present(serverEditSheet, animated: true)
+
+        }
+    }
+
+    // MARK: - IBAction
 
     @IBAction func quickConnect(_ sender: UIBarButtonItem) {
         let loginHostAlert = UIAlertController(title: "Connect to SSH", message: "Please input host address and port", preferredStyle: UIAlertControllerStyle.alert)
@@ -92,11 +131,9 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
         self.present(loginHostAlert, animated: true, completion: nil)
     }
 
-    override func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
-        return "Delete"
-    }
 
-    // MARK: tableview datasource
+
+    // MARK: - tableview datasource
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return fetchedResultsController.sections!.count
@@ -142,8 +179,12 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         switch editingStyle {
         case .delete:
+
+            let sshServer = fetchedResultsController.object(at: indexPath)
+            activeSSHVC[sshServer.addtime]?.removeFromParentViewController()
+            activeSSHVC.removeValue(forKey: sshServer.addtime)
             let context = HostTableViewController.persistentContainer.viewContext
-            context.delete(fetchedResultsController.object(at: indexPath))
+            context.delete(sshServer)
             do {
                 try context.save()
             } catch {
@@ -164,7 +205,11 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
         }
     }
 
-    // MARK: show terminal view
+    override func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        return NSLocalizedString("Delete", comment: "titleForDeleteConfirmationButton")
+    }
+
+    // MARK: - show terminal view
     func showSSHView(host:String, username:String, passwd:String, time:Int64 = -1){
         let SSHVC = self.storyboard?.instantiateViewController(withIdentifier: "SSHView") as? SSHViewController
         if username.isEmpty {
@@ -222,7 +267,7 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
     }
 
 
-    // MARK: NSFetchedResultsControllerDelegate
+    // MARK: - NSFetchedResultsControllerDelegate
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         if userChangeTheTable {
             return
@@ -268,5 +313,19 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
             return
         }
         tableView.endUpdates()
+    }
+
+    // MARK: -
+    func deleteServer(at indexPath: IndexPath) {
+        let sshServer = fetchedResultsController.object(at: indexPath)
+        activeSSHVC[sshServer.addtime]?.removeFromParentViewController()
+        activeSSHVC.removeValue(forKey: sshServer.addtime)
+        let context = HostTableViewController.persistentContainer.viewContext
+        context.delete(sshServer)
+        do {
+            try context.save()
+        } catch {
+            fatalError("Failure to save context:\(error)")
+        }
     }
 }

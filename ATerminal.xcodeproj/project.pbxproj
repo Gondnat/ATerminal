@@ -17,7 +17,7 @@
 		4C5163311EF11E3A000E9A76 /* Notification-AddNewServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5163301EF11E3A000E9A76 /* Notification-AddNewServer.swift */; };
 		4C99D2E11ECBECDA00684E44 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C99D2DF1ECBECDA00684E44 /* Launch Screen.storyboard */; };
 		4CD7CD881ED57CC5004FE1CE /* SSHServers.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CD7CD861ED57CC5004FE1CE /* SSHServers.xcdatamodeld */; };
-		4CE4F0711ECB386F0065B29A /* AddHostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE4F0701ECB386F0065B29A /* AddHostTableViewController.swift */; };
+		4CE4F0711ECB386F0065B29A /* ServerSettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE4F0701ECB386F0065B29A /* ServerSettingTableViewController.swift */; };
 		828F91E777BD059937804898 /* Pods_ATerminal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CE041476A3E6805D1FE584C /* Pods_ATerminal.framework */; };
 /* End PBXBuildFile section */
 
@@ -36,7 +36,7 @@
 		4C99D2E01ECBECDA00684E44 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		4CA124A81EC335D300BD26B1 /* ATerminal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ATerminal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CD7CD871ED57CC5004FE1CE /* SSHServers.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SSHServers.xcdatamodel; sourceTree = "<group>"; };
-		4CE4F0701ECB386F0065B29A /* AddHostTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddHostTableViewController.swift; sourceTree = "<group>"; };
+		4CE4F0701ECB386F0065B29A /* ServerSettingTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSettingTableViewController.swift; sourceTree = "<group>"; };
 		9CE041476A3E6805D1FE584C /* Pods_ATerminal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ATerminal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -63,7 +63,7 @@
 				4C0755F81EC550080036E063 /* HostTableViewController.swift */,
 				4C0755F91EC550080036E063 /* Info.plist */,
 				4C0755FA1EC550080036E063 /* SSHViewController.swift */,
-				4CE4F0701ECB386F0065B29A /* AddHostTableViewController.swift */,
+				4CE4F0701ECB386F0065B29A /* ServerSettingTableViewController.swift */,
 				4C99D2DF1ECBECDA00684E44 /* Launch Screen.storyboard */,
 				4CD7CD861ED57CC5004FE1CE /* SSHServers.xcdatamodeld */,
 			);
@@ -253,7 +253,7 @@
 				4C51632B1EF101AD000E9A76 /* HostNameAndStatusTableViewCell.swift in Sources */,
 				4C0756011EC550080036E063 /* SSHViewController.swift in Sources */,
 				4C0755FF1EC550080036E063 /* HostTableViewController.swift in Sources */,
-				4CE4F0711ECB386F0065B29A /* AddHostTableViewController.swift in Sources */,
+				4CE4F0711ECB386F0065B29A /* ServerSettingTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

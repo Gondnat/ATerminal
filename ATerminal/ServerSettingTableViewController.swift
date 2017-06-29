@@ -9,8 +9,9 @@
 import UIKit
 import CoreData
 
-class AddHostTableViewController: UITableViewController, UITextFieldDelegate{
+class ServerSettingTableViewController: UITableViewController, UITextFieldDelegate{
 
+    weak var server:Server?
     @IBOutlet weak var saveButton: UIBarButtonItem!
 
     @IBOutlet weak var nameTextField: UITextField!
@@ -33,8 +34,22 @@ class AddHostTableViewController: UITableViewController, UITextFieldDelegate{
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
         saveButton.isEnabled = false
-
+        nameTextField.delegate = self
+        ipTextField.delegate = self
+        userNameTextField.delegate = self
+        passwordTextField.delegate = self
         // Do any additional setup after loading the view.
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let serverInfo = server {
+            ipTextField.text = serverInfo.hostname
+            nameTextField.text = serverInfo.name
+            userNameTextField.text = serverInfo.username
+            passwordTextField.text = serverInfo.password
+
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -48,12 +63,15 @@ class AddHostTableViewController: UITableViewController, UITextFieldDelegate{
     
     @IBAction func save(_ sender: Any) {
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        let newServer = NSEntityDescription.insertNewObject(forEntityName: "Server", into: context) as! Server
-        newServer.name = nameTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        newServer.hostname = ipTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        newServer.username = userNameTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        newServer.password = passwordTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        newServer.addtime = Int64(time(nil))
+        var newServer = server
+        if nil == server {
+            newServer = NSEntityDescription.insertNewObject(forEntityName: "Server", into: context) as? Server
+            newServer?.addtime = Int64(time(nil))
+        }
+        newServer?.name = nameTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        newServer?.hostname = ipTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        newServer?.username = userNameTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        newServer?.password = passwordTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         do {
             try context.save()
         } catch {
