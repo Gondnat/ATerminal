@@ -12,6 +12,8 @@
 		4C0755FE1EC550080036E063 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C0755F61EC550080036E063 /* Main.storyboard */; };
 		4C0755FF1EC550080036E063 /* HostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0755F81EC550080036E063 /* HostTableViewController.swift */; };
 		4C0756011EC550080036E063 /* SSHViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0755FA1EC550080036E063 /* SSHViewController.swift */; };
+		4C4F19811F0618A100186B92 /* CopyrightViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4F19801F0618A100186B92 /* CopyrightViewController.swift */; };
+		4C4F19831F06195600186B92 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4F19821F06195500186B92 /* SettingViewController.swift */; };
 		4C51632B1EF101AD000E9A76 /* HostNameAndStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C51632A1EF101AD000E9A76 /* HostNameAndStatusTableViewCell.swift */; };
 		4C51632D1EF103CE000E9A76 /* LabelAndTextTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C51632C1EF103CE000E9A76 /* LabelAndTextTableViewCell.swift */; };
 		4C5163311EF11E3A000E9A76 /* Notification-AddNewServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5163301EF11E3A000E9A76 /* Notification-AddNewServer.swift */; };
@@ -30,6 +32,8 @@
 		4C0755F81EC550080036E063 /* HostTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostTableViewController.swift; sourceTree = "<group>"; };
 		4C0755F91EC550080036E063 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C0755FA1EC550080036E063 /* SSHViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHViewController.swift; sourceTree = "<group>"; };
+		4C4F19801F0618A100186B92 /* CopyrightViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CopyrightViewController.swift; sourceTree = "<group>"; };
+		4C4F19821F06195500186B92 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		4C51632A1EF101AD000E9A76 /* HostNameAndStatusTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostNameAndStatusTableViewCell.swift; sourceTree = "<group>"; };
 		4C51632C1EF103CE000E9A76 /* LabelAndTextTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelAndTextTableViewCell.swift; sourceTree = "<group>"; };
 		4C5163301EF11E3A000E9A76 /* Notification-AddNewServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Notification-AddNewServer.swift"; sourceTree = "<group>"; };
@@ -66,6 +70,8 @@
 				4CE4F0701ECB386F0065B29A /* ServerSettingTableViewController.swift */,
 				4C99D2DF1ECBECDA00684E44 /* Launch Screen.storyboard */,
 				4CD7CD861ED57CC5004FE1CE /* SSHServers.xcdatamodeld */,
+				4C4F19801F0618A100186B92 /* CopyrightViewController.swift */,
+				4C4F19821F06195500186B92 /* SettingViewController.swift */,
 			);
 			path = ATerminal;
 			sourceTree = SOURCE_ROOT;
@@ -247,9 +253,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C5163311EF11E3A000E9A76 /* Notification-AddNewServer.swift in Sources */,
+				4C4F19811F0618A100186B92 /* CopyrightViewController.swift in Sources */,
 				4C51632D1EF103CE000E9A76 /* LabelAndTextTableViewCell.swift in Sources */,
 				4C0755FB1EC550080036E063 /* AppDelegate.swift in Sources */,
 				4CD7CD881ED57CC5004FE1CE /* SSHServers.xcdatamodeld in Sources */,
+				4C4F19831F06195600186B92 /* SettingViewController.swift in Sources */,
 				4C51632B1EF101AD000E9A76 /* HostNameAndStatusTableViewCell.swift in Sources */,
 				4C0756011EC550080036E063 /* SSHViewController.swift in Sources */,
 				4C0755FF1EC550080036E063 /* HostTableViewController.swift in Sources */,
