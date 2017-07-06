@@ -18,7 +18,7 @@ import CoreData
 //}
 
 enum SortKeyWord:String {
-    case time = "addtime"
+    case date = "addtime"
     case name = "name"
 }
 
@@ -26,27 +26,39 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
 
     private var searchController:UISearchController!
     private var activeSSHVC = [Int64:SSHViewController]()
-    private var sortKeyWord:SortKeyWord = .time
 
     private var userChangeTheTable:Bool = false
 
-
-    private var nameSort:NSSortDescriptor {
-        return NSSortDescriptor(key: sortKeyWord.rawValue, ascending: true)
+    private var sortKeyWord:SortKeyWord = .date {
+        didSet {
+            fetchedResultsController.fetchRequest.sortDescriptors = [NSSortDescriptor(key: sortKeyWord.rawValue, ascending: true)]
+            do {
+                try fetchedResultsController.performFetch()
+            } catch {
+                fatalError("Failed to initialize FetchedResultsController: \(error)")
+            }
+            tableView.reloadData()
+        }
     }
-
     private var searchWord:String? {
         didSet {
+            if searchWord != nil && searchWord!.count > 0 {
+                fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "name like %@ OR  hostname like %@ OR username like %@", searchWord!, searchWord!, searchWord!)
+            } else {
+                fetchedResultsController.fetchRequest.predicate = nil
+            }
+            do {
+                try fetchedResultsController.performFetch()
+            } catch {
+                fatalError("Failed to initialize FetchedResultsController: \(error)")
+            }
             tableView.reloadData()
         }
     }
 
-    private var fetchedResultsController:NSFetchedResultsController<Server> {
+    private lazy var fetchedResultsController = { () -> NSFetchedResultsController<Server> in
         let request:NSFetchRequest<Server> = Server.fetchRequest()
-        if searchWord != nil && searchWord!.count > 0 {
-            request.predicate = NSPredicate(format: "name like %@ OR  hostname like %@ OR username like %@", searchWord!, searchWord!, searchWord!)
-        }
-        request.sortDescriptors = [nameSort]
+        request.sortDescriptors = [NSSortDescriptor(key: SortKeyWord.date.rawValue, ascending: true)]
         let moc = ServersController.persistentContainer.viewContext
         let _fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
         _fetchedResultsController.delegate = self
@@ -56,7 +68,7 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
             fatalError("Failed to initialize FetchedResultsController: \(error)")
         }
         return _fetchedResultsController
-    }
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,14 +85,14 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
 
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.tableView.reloadData()
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        self.tableView.reloadData()
+//    }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//    }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showServerSetting" && sender is UITableViewCell{
             var serverSettingVC:ServerSettingTableViewController?
