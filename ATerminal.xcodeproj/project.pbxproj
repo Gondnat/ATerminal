@@ -17,6 +17,8 @@
 		4C51632B1EF101AD000E9A76 /* HostNameAndStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C51632A1EF101AD000E9A76 /* HostNameAndStatusTableViewCell.swift */; };
 		4C51632D1EF103CE000E9A76 /* LabelAndTextTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C51632C1EF103CE000E9A76 /* LabelAndTextTableViewCell.swift */; };
 		4C5163311EF11E3A000E9A76 /* Notification-AddNewServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5163301EF11E3A000E9A76 /* Notification-AddNewServer.swift */; };
+		4C5999911F0DD63A002975D8 /* ServersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5999901F0DD63A002975D8 /* ServersController.swift */; };
+		4C5999941F0DD7A8002975D8 /* searchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5999921F0DD7A8002975D8 /* searchResultViewController.swift */; };
 		4C99D2E11ECBECDA00684E44 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C99D2DF1ECBECDA00684E44 /* Launch Screen.storyboard */; };
 		4CD7CD881ED57CC5004FE1CE /* SSHServers.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CD7CD861ED57CC5004FE1CE /* SSHServers.xcdatamodeld */; };
 		4CE4F0711ECB386F0065B29A /* ServerSettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE4F0701ECB386F0065B29A /* ServerSettingTableViewController.swift */; };
@@ -37,6 +39,8 @@
 		4C51632A1EF101AD000E9A76 /* HostNameAndStatusTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostNameAndStatusTableViewCell.swift; sourceTree = "<group>"; };
 		4C51632C1EF103CE000E9A76 /* LabelAndTextTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelAndTextTableViewCell.swift; sourceTree = "<group>"; };
 		4C5163301EF11E3A000E9A76 /* Notification-AddNewServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Notification-AddNewServer.swift"; sourceTree = "<group>"; };
+		4C5999901F0DD63A002975D8 /* ServersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServersController.swift; sourceTree = "<group>"; };
+		4C5999921F0DD7A8002975D8 /* searchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = searchResultViewController.swift; sourceTree = "<group>"; };
 		4C99D2E01ECBECDA00684E44 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		4CA124A81EC335D300BD26B1 /* ATerminal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ATerminal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CD7CD871ED57CC5004FE1CE /* SSHServers.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SSHServers.xcdatamodel; sourceTree = "<group>"; };
@@ -59,6 +63,7 @@
 		4C0755F11EC550080036E063 /* ATerminal */ = {
 			isa = PBXGroup;
 			children = (
+				4C24D1151F0CC502006C9D03 /* Model */,
 				4C51632F1EF11E01000E9A76 /* Extension */,
 				4C51632E1EF103D8000E9A76 /* TableViewCell */,
 				4C0755F21EC550080036E063 /* AppDelegate.swift */,
@@ -72,9 +77,18 @@
 				4CD7CD861ED57CC5004FE1CE /* SSHServers.xcdatamodeld */,
 				4C4F19801F0618A100186B92 /* CopyrightViewController.swift */,
 				4C4F19821F06195500186B92 /* SettingViewController.swift */,
+				4C5999921F0DD7A8002975D8 /* searchResultViewController.swift */,
 			);
 			path = ATerminal;
 			sourceTree = SOURCE_ROOT;
+		};
+		4C24D1151F0CC502006C9D03 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4C5999901F0DD63A002975D8 /* ServersController.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
 		};
 		4C51632E1EF103D8000E9A76 /* TableViewCell */ = {
 			isa = PBXGroup;
@@ -163,7 +177,7 @@
 				TargetAttributes = {
 					4CA124A71EC335D300BD26B1 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = 4S8GPRL5N3;
+						DevelopmentTeam = H3QAP7M2S2;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -255,12 +269,14 @@
 				4C5163311EF11E3A000E9A76 /* Notification-AddNewServer.swift in Sources */,
 				4C4F19811F0618A100186B92 /* CopyrightViewController.swift in Sources */,
 				4C51632D1EF103CE000E9A76 /* LabelAndTextTableViewCell.swift in Sources */,
+				4C5999911F0DD63A002975D8 /* ServersController.swift in Sources */,
 				4C0755FB1EC550080036E063 /* AppDelegate.swift in Sources */,
 				4CD7CD881ED57CC5004FE1CE /* SSHServers.xcdatamodeld in Sources */,
 				4C4F19831F06195600186B92 /* SettingViewController.swift in Sources */,
 				4C51632B1EF101AD000E9A76 /* HostNameAndStatusTableViewCell.swift in Sources */,
 				4C0756011EC550080036E063 /* SSHViewController.swift in Sources */,
 				4C0755FF1EC550080036E063 /* HostTableViewController.swift in Sources */,
+				4C5999941F0DD7A8002975D8 /* searchResultViewController.swift in Sources */,
 				4CE4F0711ECB386F0065B29A /* ServerSettingTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -387,7 +403,7 @@
 			baseConfigurationReference = 230CC230CA2F295ED78BA167 /* Pods-ATerminal.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 4S8GPRL5N3;
+				DEVELOPMENT_TEAM = H3QAP7M2S2;
 				INFOPLIST_FILE = "$(SRCROOT)/ATerminal/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.thnuth.ATerminal;
@@ -401,7 +417,7 @@
 			baseConfigurationReference = 1BC2DF34F1DE22697357D9E5 /* Pods-ATerminal.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 4S8GPRL5N3;
+				DEVELOPMENT_TEAM = H3QAP7M2S2;
 				INFOPLIST_FILE = "$(SRCROOT)/ATerminal/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.thnuth.ATerminal;

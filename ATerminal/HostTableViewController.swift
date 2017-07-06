@@ -17,30 +17,46 @@ import CoreData
 //
 //}
 
-class HostTableViewController:  UITableViewController, UIViewControllerTransitioningDelegate,  NSFetchedResultsControllerDelegate {
+enum SortKeyWord:String {
+    case time = "addtime"
+    case name = "name"
+}
+
+class HostTableViewController:  UITableViewController, UIViewControllerTransitioningDelegate,  NSFetchedResultsControllerDelegate, UISearchResultsUpdating {
+
+    private var searchController:UISearchController!
+    private var activeSSHVC = [Int64:SSHViewController]()
+    private var sortKeyWord:SortKeyWord = .time
 
     private var userChangeTheTable:Bool = false
-    private var activeSSHVC = [Int64:SSHViewController]()
-    
 
-    static private let persistentContainer: NSPersistentContainer = {
-        return (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer
-    }()!
 
-    private lazy var fetchedResultsController:NSFetchedResultsController = { () -> NSFetchedResultsController<Server> in
+    private var nameSort:NSSortDescriptor {
+        return NSSortDescriptor(key: sortKeyWord.rawValue, ascending: true)
+    }
+
+    private var searchWord:String? {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+
+    private var fetchedResultsController:NSFetchedResultsController<Server> {
         let request:NSFetchRequest<Server> = Server.fetchRequest()
-        let nameSort = NSSortDescriptor(key: "addtime", ascending: true)
+        if searchWord != nil && searchWord!.count > 0 {
+            request.predicate = NSPredicate(format: "name like %@ OR  hostname like %@ OR username like %@", searchWord!, searchWord!, searchWord!)
+        }
         request.sortDescriptors = [nameSort]
-        let moc = persistentContainer.viewContext
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-        fetchedResultsController.delegate = self
+        let moc = ServersController.persistentContainer.viewContext
+        let _fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+        _fetchedResultsController.delegate = self
         do {
-            try fetchedResultsController.performFetch()
+            try _fetchedResultsController.performFetch()
         } catch {
             fatalError("Failed to initialize FetchedResultsController: \(error)")
         }
-        return fetchedResultsController
-    }()
+        return _fetchedResultsController
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +64,12 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(HostTableViewController.longPressAction(gesture:)))
         longPressGesture.minimumPressDuration = 1.0
         tableView.addGestureRecognizer(longPressGesture)
+
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        tableView.tableHeaderView = searchController.searchBar
+        definesPresentationContext = true
 
     }
 
@@ -183,7 +205,7 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
             let sshServer = fetchedResultsController.object(at: indexPath)
             activeSSHVC[sshServer.addtime]?.removeFromParentViewController()
             activeSSHVC.removeValue(forKey: sshServer.addtime)
-            let context = HostTableViewController.persistentContainer.viewContext
+            let context = ServersController.persistentContainer.viewContext
             context.delete(sshServer)
             do {
                 try context.save()
@@ -320,12 +342,17 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
         let sshServer = fetchedResultsController.object(at: indexPath)
         activeSSHVC[sshServer.addtime]?.removeFromParentViewController()
         activeSSHVC.removeValue(forKey: sshServer.addtime)
-        let context = HostTableViewController.persistentContainer.viewContext
+        let context = ServersController.persistentContainer.viewContext
         context.delete(sshServer)
         do {
             try context.save()
         } catch {
             fatalError("Failure to save context:\(error)")
         }
+    }
+
+    // MARK: - search updater
+    func updateSearchResults(for searchController: UISearchController) {
+        searchWord = searchController.searchBar.text
     }
 }
