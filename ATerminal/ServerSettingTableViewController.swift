@@ -78,11 +78,6 @@ class ServerSettingTableViewController: UITableViewController, UITextFieldDelega
             fatalError("Failure to save context:\(error)")
         }
         self.dismiss(animated: true, completion: nil)
-    }
-
-//    override var prefersStatusBarHidden: Bool {
-//        return true
-//    }
 
     // MARK: - UITextFieldDelegate
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

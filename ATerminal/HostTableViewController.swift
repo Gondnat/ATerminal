@@ -9,14 +9,6 @@
 import UIKit
 import CoreData
 
-//struct SSHServer {
-//    var host:String!
-//    var user:String!
-//    var passwd:String!
-//    var alias:String?
-//
-//}
-
 enum SortKeyWord:String {
     case date = "addtime"
     case name = "name"
@@ -84,14 +76,6 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
         definesPresentationContext = true
 
     }
-
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        self.tableView.reloadData()
-//    }
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//    }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showServerSetting" && sender is UITableViewCell{
