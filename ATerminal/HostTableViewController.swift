@@ -35,7 +35,7 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
     private var searchWord:String? {
         didSet {
             if searchWord != nil && searchWord!.count > 0 {
-                fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "name like %@ OR  hostname like %@ OR username like %@", searchWord!, searchWord!, searchWord!)
+                fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "name like[c] %@ OR  hostname like[c] %@ OR username like[c] %@", "*".appending(searchWord!.appending("*")), searchWord!.appending("*"), searchWord!.appending("*"))
             } else {
                 fetchedResultsController.fetchRequest.predicate = nil
             }
