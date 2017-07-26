@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import NMSSH
 
 enum SortKeyWord:String {
     case date = "addtime"
@@ -16,6 +17,22 @@ enum SortKeyWord:String {
 
 class HostTableViewController:  UITableViewController, UIViewControllerTransitioningDelegate,  NSFetchedResultsControllerDelegate, UISearchResultsUpdating {
 
+    lazy var cancelAlertAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "button title, user used to cancel"), style: .cancel)
+    lazy var okAlertAction = UIAlertAction(title: NSLocalizedString("OK", comment: "button title, user comfirm the status"), style: .default)
+
+
+
+    private var cacheFolder:URL {
+        return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+    }
+
+    private var knowHostsFilePath:String {
+        let path = URL(fileURLWithPath: "./know_hosts", relativeTo: cacheFolder).path
+        if !FileManager.default.fileExists(atPath: path) {
+            FileManager.default.createFile(atPath: path, contents: nil)
+        }
+        return path
+    }
     private var searchController:UISearchController!
     private var activeSSHVC = [Int64:SSHViewController]()
 
@@ -74,7 +91,6 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
         searchController.dimsBackgroundDuringPresentation = false
         tableView.tableHeaderView = searchController.searchBar
         definesPresentationContext = true
-
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -93,7 +109,7 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
     }
 
     // MARK: -
-    func longPressAction(gesture: UILongPressGestureRecognizer) {
+    @objc func longPressAction(gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
             let point = gesture.location(in: tableView)
             guard let indexPath = tableView.indexPathForRow(at: point) else {
@@ -108,9 +124,7 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
             serverEditSheet.addAction(UIAlertAction(title: NSLocalizedString("Delete", comment: "delete server"), style: .default, handler: { (UIAlertAction) in
                 self.deleteServer(at: indexPath)
             }))
-            serverEditSheet.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "cancel"), style: .cancel, handler: { (action:UIAlertAction) in
-                print("Cancel")
-            }))
+            serverEditSheet.addAction(cancelAlertAction)
             self.present(serverEditSheet, animated: true)
 
         }
@@ -129,12 +143,12 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
         loginHostAlert.addTextField { (user:UITextField) in
             user.returnKeyType = .next
             user.keyboardType = .asciiCapable
-            user.placeholder = "User name"
+            user.placeholder = PlaceHolder.username
         }
         loginHostAlert.addTextField { (passwd:UITextField) in
             passwd.returnKeyType = .go
             passwd.keyboardType = .asciiCapable
-            passwd.placeholder = "Password"
+            passwd.placeholder = PlaceHolder.password
         }
         let connect = UIAlertAction(title: "Connect", style: UIAlertActionStyle.default) { (UIAlertAction) in
             guard let textFields = loginHostAlert.textFields else {
@@ -142,10 +156,8 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
             }
             self.showSSHView(host: textFields[0].text!, username: textFields[1].text!, passwd: textFields[2].text!, time: -1)
         }
-        let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (UIAlertAction) in
-        }
         loginHostAlert.addAction(connect)
-        loginHostAlert.addAction(cancel)
+        loginHostAlert.addAction(cancelAlertAction)
         self.present(loginHostAlert, animated: true, completion: nil)
     }
 
@@ -228,19 +240,19 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
     }
 
     // MARK: - show terminal view
-    func showSSHView(host:String, username:String, passwd:String, time:Int64 = -1){
+    func showSSHView(host:String, username:String, passwd:String = "", time:Int64 = -1){
         let SSHVC = self.storyboard?.instantiateViewController(withIdentifier: "SSHView") as? SSHViewController
         if username.isEmpty {
             let loginAlert = UIAlertController(title: "Login", message: "Connect to \"\(host)\"", preferredStyle: .alert)
             loginAlert.addTextField { (user:UITextField) in
                 user.returnKeyType = .next
                 user.keyboardType = .asciiCapable
-                user.placeholder = "User name"
+                user.placeholder = PlaceHolder.username
             }
             loginAlert.addTextField { (passwd:UITextField) in
                 passwd.returnKeyType = .go
                 passwd.keyboardType = .asciiCapable
-                passwd.placeholder = "Password"
+                passwd.placeholder = PlaceHolder.password
             }
             let connect = UIAlertAction(title: "Connect", style: UIAlertActionStyle.default) { (UIAlertAction) in
                 guard let textFields = loginAlert.textFields else {
@@ -248,10 +260,9 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
                 }
                 self.showSSHView(host: host, username: textFields[0].text!, passwd: textFields[1].text!, time: time)
             }
-            let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (UIAlertAction) in
-            }
+
             loginAlert.addAction(connect)
-            loginAlert.addAction(cancel)
+            loginAlert.addAction(cancelAlertAction)
             self.present(loginAlert, animated: true, completion: nil)
 
         } else if passwd.isEmpty {
@@ -267,19 +278,49 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
                 }
                 self.showSSHView(host: host, username: username, passwd: textFields[0].text!, time: time)
             }
-            let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (UIAlertAction) in
-            }
             loginAlert.addAction(connect)
-            loginAlert.addAction(cancel)
+            loginAlert.addAction(cancelAlertAction)
             self.present(loginAlert, animated: true, completion: nil)
         } else if nil != SSHVC {
-            SSHVC?.host = host
-            SSHVC?.user = username
-            SSHVC?.passwd = passwd
-            self.tableView.reloadData()
-            self.navigationController?.pushViewController(SSHVC!, animated: true)
-            if time != -1 {
-                activeSSHVC[time] = SSHVC
+
+            if let session = NMSSHSession(host: host, andUsername: username) {
+
+                if !session.connect() {
+                    let connectFailedAlert = UIAlertController(title: NSLocalizedString("Connect failed", comment: "Connect failed"), message: NSLocalizedString("Can't connect to \(session.host!)", comment: "Can't connect to special IP Addres in %@"), preferredStyle: .alert)
+                    connectFailedAlert.addAction(okAlertAction)
+                    self.present(connectFailedAlert, animated: true)
+                    return
+                }
+
+                let pushSSHVC = {
+                    self.tableView.reloadData()
+                    SSHVC?.session = session
+                    SSHVC?.passwd = passwd
+                    self.navigationController?.pushViewController(SSHVC!, animated: true)
+                    if time != -1 {
+                        self.activeSSHVC[time] = SSHVC
+                    }
+                }
+
+                switch session.knownHostStatus(inFiles: [knowHostsFilePath]) {
+                case .match:
+                    pushSSHVC()
+                case .failure, .mismatch:
+                    return
+                case .notFound:
+                    let unknowFingerprint = String(format:NSLocalizedString("Fingerprint is %@", comment: "Alert for unknow fingerprint")
+                        , session.fingerprint(.SHA1))
+                    let hostKeyAlert = UIAlertController(title: NSLocalizedString("Unknow fingerprint", comment: "Title of host key alert"), message: unknowFingerprint, preferredStyle: .alert)
+                    let connectAnyway = UIAlertAction(title: NSLocalizedString("Connect", comment: "Title for sheet alert user if connect"), style: .default, handler: { (UIAlertAction) in
+                        session.addKnownHostName(session.host, port: session.port as! Int, toFile: self.knowHostsFilePath, withSalt: nil)
+                        pushSSHVC()
+                    })
+
+                    hostKeyAlert.addAction(connectAnyway)
+                    hostKeyAlert.addAction(cancelAlertAction)
+                    self.present(hostKeyAlert, animated: true)
+                }
+
             }
         }
     }

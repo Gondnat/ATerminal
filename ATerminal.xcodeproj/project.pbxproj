@@ -21,6 +21,7 @@
 		4C5999941F0DD7A8002975D8 /* searchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5999921F0DD7A8002975D8 /* searchResultViewController.swift */; };
 		4C99D2E11ECBECDA00684E44 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C99D2DF1ECBECDA00684E44 /* Launch Screen.storyboard */; };
 		4CD7CD881ED57CC5004FE1CE /* SSHServers.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CD7CD861ED57CC5004FE1CE /* SSHServers.xcdatamodeld */; };
+		4CD9AB2C1F2863B200FFD960 /* PlaceHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9AB2B1F2863B200FFD960 /* PlaceHolder.swift */; };
 		4CE4F0711ECB386F0065B29A /* ServerSettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE4F0701ECB386F0065B29A /* ServerSettingTableViewController.swift */; };
 		828F91E777BD059937804898 /* Pods_ATerminal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CE041476A3E6805D1FE584C /* Pods_ATerminal.framework */; };
 /* End PBXBuildFile section */
@@ -44,6 +45,7 @@
 		4C99D2E01ECBECDA00684E44 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		4CA124A81EC335D300BD26B1 /* ATerminal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ATerminal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CD7CD871ED57CC5004FE1CE /* SSHServers.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SSHServers.xcdatamodel; sourceTree = "<group>"; };
+		4CD9AB2B1F2863B200FFD960 /* PlaceHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceHolder.swift; sourceTree = "<group>"; };
 		4CE4F0701ECB386F0065B29A /* ServerSettingTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSettingTableViewController.swift; sourceTree = "<group>"; };
 		9CE041476A3E6805D1FE584C /* Pods_ATerminal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ATerminal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -78,6 +80,7 @@
 				4C4F19801F0618A100186B92 /* CopyrightViewController.swift */,
 				4C4F19821F06195500186B92 /* SettingViewController.swift */,
 				4C5999921F0DD7A8002975D8 /* searchResultViewController.swift */,
+				4CD9AB2E1F2863C100FFD960 /* other */,
 			);
 			path = ATerminal;
 			sourceTree = SOURCE_ROOT;
@@ -123,6 +126,14 @@
 				4CA124A81EC335D300BD26B1 /* ATerminal.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		4CD9AB2E1F2863C100FFD960 /* other */ = {
+			isa = PBXGroup;
+			children = (
+				4CD9AB2B1F2863B200FFD960 /* PlaceHolder.swift */,
+			);
+			name = other;
 			sourceTree = "<group>";
 		};
 		CB516AD371500D3950695134 /* Frameworks */ = {
@@ -172,12 +183,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = Thnuth;
 				TargetAttributes = {
 					4CA124A71EC335D300BD26B1 = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = H3QAP7M2S2;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -278,6 +290,7 @@
 				4C0755FF1EC550080036E063 /* HostTableViewController.swift in Sources */,
 				4C5999941F0DD7A8002975D8 /* searchResultViewController.swift in Sources */,
 				4CE4F0711ECB386F0065B29A /* ServerSettingTableViewController.swift in Sources */,
+				4CD9AB2C1F2863B200FFD960 /* PlaceHolder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,7 +326,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -321,7 +336,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -364,7 +383,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -372,7 +393,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -408,7 +433,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.thnuth.ATerminal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -422,7 +448,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.thnuth.ATerminal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

@@ -17,7 +17,11 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
     private var lastCommand:String = ""
     private var lastLinePrefix:String = "~$"
     
-    private var session:NMSSHSession!
+    var session:NMSSHSession! {
+        didSet {
+            session.delegate = self
+        }
+    }
     private var queue:DispatchQueue {
         return DispatchQueue(label: "SSHVIEW.queue")
     }
@@ -25,22 +29,22 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
     
 //    private var lastText:String = ""
     
-    public var host:String!
-    public var user:String!
+//    public var host:String!
+//    public var user:String!
     public var passwd:String!
-    
+
     var isConnected: Bool {
         return session.isConnected
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        session = NMSSHSession(host: host, andUsername: user)
-//        session = NMSSHSession.connect(toHost: host, withUsername: user)
-        session.delegate = self
-
-    }
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        // Do any additional setup after loading the view, typically from a nib.
+//        session = NMSSHSession(host: host, andUsername: user)
+////        session = NMSSHSession.connect(toHost: host, withUsername: user)
+//        session.delegate = self
+//
+//    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -88,7 +92,7 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
                 }
             } else {
                 DispatchQueue.main.async(execute: {
-                    self.append("can't connect to"+self.host)
+                    self.append("can't connect to"+self.session.host)
                 })
         }
         }
@@ -103,7 +107,7 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    // MARK: IBAction
+    // MARK: - IBAction
     @IBAction func disconnect(_ sender: UIBarButtonItem) {
         queue.async {
             if self.session.isConnected {
@@ -112,12 +116,12 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
         }
     }
     
-    // MARK:
+    // MARK: -
     func append(_ other:String) {
         self.textView.text.append(other)
         if let text = textView.text {
             if let range = text.range(of: "\n", options: .backwards, range: text.startIndex..<text.index(before: text.endIndex)) {
-                lastLinePrefix = text[range.upperBound..<text.endIndex]
+                lastLinePrefix = String(text[range.upperBound..<text.endIndex])
             }
         }
     }
@@ -135,7 +139,7 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
         }
     }
     
-    // MARK: NMSSHSession
+    // MARK: - NMSSHSession
     func session(_ session: NMSSHSession!, keyboardInteractiveRequest request: String!) -> String! {
         DispatchQueue.main.async(execute: {
             self.append(request)
@@ -185,7 +189,6 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
         if text.isEmpty {
             if !self.lastCommand.isEmpty {
                 lastCommand.remove(at: lastCommand.index(before: lastCommand.endIndex))
-                
                 return true
             } else {
                 return false
@@ -195,8 +198,8 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
         if text == "\n" {
             if let text = textView.text {
                 if let range = text.range(of: "\n", options: .backwards, range: text.startIndex..<text.index(before: text.endIndex)) {
-                    let lastLine = text[range.upperBound..<text.endIndex]
-                    lastCommand = lastLine[lastLinePrefix.endIndex..<lastLine.endIndex]
+                    let lastLine = String(text[range.upperBound..<text.endIndex])
+                    lastCommand = String(lastLine[lastLinePrefix.endIndex..<lastLine.endIndex])
                     lastCommand.append("\n")
                 }
             }
@@ -207,7 +210,7 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
     }
     
     // MARK: Notification
-    func keyboardWillShow(notification: NSNotification) {
+    @objc func keyboardWillShow(notification: NSNotification) {
         let ownFrame = self.view.window!.convert(textView.frame, from: textView.superview)
         if let userInfo = notification.userInfo {
             let keyboardFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect
@@ -217,7 +220,7 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
             textView.scrollIndicatorInsets = textView.contentInset
         }
     }
-    func keyboardWillHide(notification:NSNotification) {
+    @objc func keyboardWillHide(notification:NSNotification) {
         textView.contentInset = UIEdgeInsetsMake(textView.contentInset.top, 0, 0, 0)
         textView.scrollIndicatorInsets = textView.contentInset
     }
