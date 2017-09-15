@@ -42,23 +42,17 @@
                                                 <constraint firstAttribute="width" secondItem="Zx5-Ih-CfJ" secondAttribute="height" multiplier="1:1" id="gf1-eG-18O"/>
                                             </constraints>
                                         </imageView>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="BMu-et-kiv">
-                                            <rect key="frame" x="340" y="12" width="20" height="20"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="BMu-et-kiv" firstAttribute="centerY" secondItem="Zx5-Ih-CfJ" secondAttribute="centerY" id="BaC-hI-Mg3"/>
                                         <constraint firstItem="Zx5-Ih-CfJ" firstAttribute="centerY" secondItem="vtc-PH-xHt" secondAttribute="centerY" id="HiC-zs-392"/>
                                         <constraint firstAttribute="trailing" secondItem="Zx5-Ih-CfJ" secondAttribute="trailing" constant="20" symbolic="YES" id="KKB-T7-a5K"/>
                                         <constraint firstItem="Zx5-Ih-CfJ" firstAttribute="leading" secondItem="Jtc-Zc-zR0" secondAttribute="trailing" id="Nb3-vX-xeZ"/>
                                         <constraint firstItem="Jtc-Zc-zR0" firstAttribute="top" secondItem="vtc-PH-xHt" secondAttribute="top" id="PZW-Df-nTw"/>
                                         <constraint firstAttribute="bottom" secondItem="Jtc-Zc-zR0" secondAttribute="bottom" id="SQh-El-VeH"/>
-                                        <constraint firstItem="BMu-et-kiv" firstAttribute="centerX" secondItem="Zx5-Ih-CfJ" secondAttribute="centerX" id="evm-Ig-Skh"/>
                                         <constraint firstItem="Jtc-Zc-zR0" firstAttribute="leading" secondItem="vtc-PH-xHt" secondAttribute="leading" constant="20" symbolic="YES" id="kAB-am-iSE"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activityIndicator" destination="BMu-et-kiv" id="rGJ-DA-1Pj"/>
                                     <outlet property="name" destination="Jtc-Zc-zR0" id="c4p-2M-sri"/>
                                     <outlet property="statusImage" destination="Zx5-Ih-CfJ" id="Mum-zY-73w"/>
                                 </connections>
