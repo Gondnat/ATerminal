@@ -89,7 +89,13 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
-        tableView.tableHeaderView = searchController.searchBar
+        if #available(iOS 11.0, *) {
+            self.navigationItem.searchController = searchController
+            self.navigationItem.searchController?.isActive = true
+            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: UIColor.white]
+        } else {
+            tableView.tableHeaderView = searchController.searchBar
+        }
         definesPresentationContext = true
     }
 

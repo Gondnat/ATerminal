@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.19" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="GcY-m7-uWV">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="GcY-m7-uWV">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.16"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -41,17 +42,23 @@
                                                 <constraint firstAttribute="width" secondItem="Zx5-Ih-CfJ" secondAttribute="height" multiplier="1:1" id="gf1-eG-18O"/>
                                             </constraints>
                                         </imageView>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="BMu-et-kiv">
+                                            <rect key="frame" x="340" y="12" width="20" height="20"/>
+                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="BMu-et-kiv" firstAttribute="centerY" secondItem="Zx5-Ih-CfJ" secondAttribute="centerY" id="BaC-hI-Mg3"/>
                                         <constraint firstItem="Zx5-Ih-CfJ" firstAttribute="centerY" secondItem="vtc-PH-xHt" secondAttribute="centerY" id="HiC-zs-392"/>
                                         <constraint firstAttribute="trailing" secondItem="Zx5-Ih-CfJ" secondAttribute="trailing" constant="20" symbolic="YES" id="KKB-T7-a5K"/>
                                         <constraint firstItem="Zx5-Ih-CfJ" firstAttribute="leading" secondItem="Jtc-Zc-zR0" secondAttribute="trailing" id="Nb3-vX-xeZ"/>
                                         <constraint firstItem="Jtc-Zc-zR0" firstAttribute="top" secondItem="vtc-PH-xHt" secondAttribute="top" id="PZW-Df-nTw"/>
                                         <constraint firstAttribute="bottom" secondItem="Jtc-Zc-zR0" secondAttribute="bottom" id="SQh-El-VeH"/>
+                                        <constraint firstItem="BMu-et-kiv" firstAttribute="centerX" secondItem="Zx5-Ih-CfJ" secondAttribute="centerX" id="evm-Ig-Skh"/>
                                         <constraint firstItem="Jtc-Zc-zR0" firstAttribute="leading" secondItem="vtc-PH-xHt" secondAttribute="leading" constant="20" symbolic="YES" id="kAB-am-iSE"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="activityIndicator" destination="BMu-et-kiv" id="rGJ-DA-1Pj"/>
                                     <outlet property="name" destination="Jtc-Zc-zR0" id="c4p-2M-sri"/>
                                     <outlet property="statusImage" destination="Zx5-Ih-CfJ" id="Mum-zY-73w"/>
                                 </connections>
@@ -374,14 +381,11 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController storyboardIdentifier="SSHView" id="BYZ-38-t0r" customClass="SSHViewController" customModule="ATerminal" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="UITextView">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <viewLayoutGuide key="safeArea" id="tFJ-jO-iDf"/>
                         <connections>
                             <outlet property="delegate" destination="BYZ-38-t0r" id="W83-Mo-DVD"/>
                         </connections>
@@ -407,10 +411,10 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="GcY-m7-uWV" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="fPf-lN-T4i">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.3294117647" green="0.78039215689999997" blue="0.98823529409999999" alpha="1" colorSpace="deviceRGB"/>
-                        <color key="barTintColor" red="0.093547225391300087" green="0.33589605437665782" blue="0.33215813679803685" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="barTintColor" red="0.093547225390000002" green="0.33589605439999998" blue="0.3321581368" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" red="0.3294117647" green="0.78039215689999997" blue="0.98823529409999999" alpha="1" colorSpace="deviceRGB"/>
                         </textAttributes>
@@ -428,10 +432,6 @@
         <scene sceneID="Og0-vs-myI">
             <objects>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" id="D9z-k9-nLo" customClass="CopyrightViewController" customModule="ATerminal" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="HZq-FS-Gqh"/>
-                        <viewControllerLayoutGuide type="bottom" id="NZg-qp-7wU"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Yoi-y9-5g1">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -469,11 +469,12 @@ https://github.com/Gnodnate/ATerminal
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="0FX-eM-lNE" firstAttribute="leading" secondItem="Yoi-y9-5g1" secondAttribute="leading" id="5oJ-3I-ldy"/>
-                            <constraint firstAttribute="trailing" secondItem="0FX-eM-lNE" secondAttribute="trailing" id="Axk-2Y-8h7"/>
-                            <constraint firstItem="NZg-qp-7wU" firstAttribute="top" secondItem="0FX-eM-lNE" secondAttribute="bottom" id="WvP-J6-ekT"/>
-                            <constraint firstItem="0FX-eM-lNE" firstAttribute="top" secondItem="HZq-FS-Gqh" secondAttribute="bottom" id="YjD-HA-t23"/>
+                            <constraint firstItem="0FX-eM-lNE" firstAttribute="leading" secondItem="OuX-ub-n3R" secondAttribute="leading" id="5oJ-3I-ldy"/>
+                            <constraint firstItem="OuX-ub-n3R" firstAttribute="trailing" secondItem="0FX-eM-lNE" secondAttribute="trailing" id="Axk-2Y-8h7"/>
+                            <constraint firstItem="OuX-ub-n3R" firstAttribute="bottom" secondItem="0FX-eM-lNE" secondAttribute="bottom" id="WvP-J6-ekT"/>
+                            <constraint firstItem="0FX-eM-lNE" firstAttribute="top" secondItem="OuX-ub-n3R" secondAttribute="top" id="YjD-HA-t23"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="OuX-ub-n3R"/>
                     </view>
                     <connections>
                         <outlet property="textView" destination="0FX-eM-lNE" id="2uO-Qw-87Y"/>
@@ -489,7 +490,7 @@ https://github.com/Gnodnate/ATerminal
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="TJD-tX-EK5" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="aJU-s0-Gxx">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.3294117647" green="0.78039215689999997" blue="0.98823529409999999" alpha="1" colorSpace="deviceRGB"/>
                         <color key="barTintColor" red="0.093816183509999998" green="0.33694899080000001" blue="0.33294549579999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -511,4 +512,5 @@ https://github.com/Gnodnate/ATerminal
     <inferredMetricsTieBreakers>
         <segue reference="5uj-VG-V6g"/>
     </inferredMetricsTieBreakers>
+    <color key="tintColor" red="0.36196612140000001" green="0.66666666669999997" blue="0.33390874390000003" alpha="1" colorSpace="calibratedRGB"/>
 </document>
