@@ -292,7 +292,7 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
             if let session = NMSSHSession(host: host, andUsername: username) {
 
                 if !session.connect() {
-                    let connectFailedAlert = UIAlertController(title: NSLocalizedString("Connect failed", comment: "Connect failed"), message: NSLocalizedString("Can't connect to \(session.host!)", comment: "Can't connect to special IP Addres in %@"), preferredStyle: .alert)
+                    let connectFailedAlert = UIAlertController(title: NSLocalizedString("Connect failed", comment: "Connect failed"), message: NSLocalizedString("Can't connect to \(host)", comment: "Can't connect to special IP Addres in %@"), preferredStyle: .alert)
                     connectFailedAlert.addAction(okAlertAction)
                     self.present(connectFailedAlert, animated: true)
                     return
