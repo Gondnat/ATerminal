@@ -153,7 +153,6 @@ class SSHViewController: UIViewController, NMSSHSessionDelegate, NMSSHChannelDel
     }
     // MARK: NMSSHChannel
     func channel(_ channel: NMSSHChannel!, didReadData message: String!) {
-        NSLog("%@", message)
         DispatchQueue.main.async(execute: {
             if ((message as NSString).character(at: 0) == 0x08) { // delete
                 self.textView.text.removeLast()
@@ -213,6 +212,30 @@ class SSHViewController: UIViewController, NMSSHSessionDelegate, NMSSHChannelDel
     @objc func keyboardWillHide(notification:NSNotification) {
         textView.contentInset = UIEdgeInsetsMake(textView.contentInset.top, 0, 0, 0)
         textView.scrollIndicatorInsets = textView.contentInset
+    }
+
+    // MARK: - Arrow key
+   override var keyCommands: [UIKeyCommand]? {
+    return [UIKeyCommand(input: UIKeyInputUpArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(arrowKeys(keyCommand:))),
+            UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(arrowKeys(keyCommand:))),
+            UIKeyCommand(input: UIKeyInputLeftArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(arrowKeys(keyCommand:))),
+            UIKeyCommand(input: UIKeyInputRightArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(arrowKeys(keyCommand:)))]
+    }
+
+    @objc func arrowKeys(keyCommand:UIKeyCommand) {
+        NSLog("%@ arrow pressed", keyCommand.input ?? "")
+//        do {
+//        switch keyCommand.input {
+//        case UIKeyInputUpArrow?:
+//            try session.channel.write("")
+//        case UIKeyInputDownArrow?:
+//            try session.channel.write("")
+//        default:
+//            break
+//        }
+//        }catch {
+//
+//        }
     }
 }
 
