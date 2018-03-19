@@ -247,7 +247,7 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
 
     // MARK: - show terminal view
     func showSSHView(host:String, username:String, passwd:String = "", time:Int64 = -1){
-        let SSHVC = self.storyboard?.instantiateViewController(withIdentifier: "SSHView") as? SSHViewController
+        let SSHVC = SSHViewController(nibName: "TerminalView", bundle: nil)
         if username.isEmpty {
             let loginAlert = UIAlertController(title: "Login", message: "Connect to \"\(host)\"", preferredStyle: .alert)
             loginAlert.addTextField { (user:UITextField) in
@@ -300,9 +300,9 @@ class HostTableViewController:  UITableViewController, UIViewControllerTransitio
 
                 let pushSSHVC = {
                     self.tableView.reloadData()
-                    SSHVC?.session = session
-                    SSHVC?.passwd = passwd
-                    self.navigationController?.pushViewController(SSHVC!, animated: true)
+                    SSHVC.session = session
+                    SSHVC.passwd = passwd
+                    self.navigationController?.pushViewController(SSHVC, animated: true)
                     if time != -1 {
                         self.activeSSHVC[time] = SSHVC
                     }

@@ -9,14 +9,12 @@
 import UIKit
 import NMSSH
 
-class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDelegate, NMSSHChannelDelegate {
+class SSHViewController: UIViewController, NMSSHSessionDelegate, NMSSHChannelDelegate, UIKeyInput {
     @IBOutlet var textView: UITextView!
 
-
-
     private var lastCommand:String = ""
-    private var lastLinePrefix:String = "~$"
-    
+//    private var lastLinePrefix:String = "~$"
+
     var session:NMSSHSession! {
         didSet {
             session.delegate = self
@@ -49,6 +47,7 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
+        self.becomeFirstResponder()
         navigationItem.title = session.host
         // keyboard notification
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
@@ -76,18 +75,17 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
                     })
                 } else {
                     DispatchQueue.main.async(execute: {
-                        self.textView.isEditable = true
+                        self.textView.isEditable = false
                     })
                     self.session.channel.delegate = self
                     self.session.channel.requestPty = true
-                    self.session.channel.ptyTerminalType = .VT100
+//                    self.session.channel.ptyTerminalType = .xterm
                 }
                 
                 do {
                     try self.session.channel.startShell()
                 } catch  {
                     DispatchQueue.main.async(execute: {
-                        self.textView.isEditable = false
                         self.append(error.localizedDescription)
                     })
                 }
@@ -120,16 +118,12 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
     // MARK: -
     func append(_ other:String) {
         self.textView.text.append(other)
-        if let text = textView.text {
-            if let range = text.range(of: "\n", options: .backwards, range: text.startIndex..<text.index(before: text.endIndex)) {
-                lastLinePrefix = String(text[range.upperBound..<text.endIndex])
-            }
-        }
+        textView.scrollRangeToVisible(NSMakeRange((textView.text as NSString).length, 0))
     }
     
     func performCommand() {
         if nil != semaphore {
-            passwd = self.lastCommand.substring(to: lastCommand.index(before: lastCommand.endIndex))
+            passwd = String(self.lastCommand[...(self.lastCommand.endIndex)]);
             semaphore?.signal()
         } else {
             let command = self.lastCommand
@@ -159,8 +153,13 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
     }
     // MARK: NMSSHChannel
     func channel(_ channel: NMSSHChannel!, didReadData message: String!) {
+        NSLog("%@", message)
         DispatchQueue.main.async(execute: {
-            self.append(message)
+            if ((message as NSString).character(at: 0) == 0x08) { // delete
+                self.textView.text.removeLast()
+            } else {
+                self.append(message)
+            }
         })
     }
     func channel(_ channel: NMSSHChannel!, didReadError error: String!) {
@@ -174,43 +173,33 @@ class SSHViewController: UIViewController, UITextViewDelegate, NMSSHSessionDeleg
             self.textView.isEditable = false
         })
     }
-    
-    // MARK: UITextView delegate
-    func textViewDidChange(_ textView: UITextView) {
-        textView.scrollRangeToVisible(NSMakeRange((textView.text as NSString).length-1, 1))
-    }
-    
-    func textViewDidChangeSelection(_ textView: UITextView) {
-        if textView.selectedRange.location < (textView.text as NSString).length - (self.lastCommand as NSString).length - 1 {
-            textView.scrollRangeToVisible(NSMakeRange((textView.text as NSString).length, 0))
-        }
-    }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if text.isEmpty {
-            if !self.lastCommand.isEmpty {
-                lastCommand.remove(at: lastCommand.index(before: lastCommand.endIndex))
-                return true
-            } else {
-                return false
-            }
-        }
-        self.lastCommand.append(text)
-        if text == "\n" {
-            if let text = textView.text {
-                if let range = text.range(of: "\n", options: .backwards, range: text.startIndex..<text.index(before: text.endIndex)) {
-                    let lastLine = String(text[range.upperBound..<text.endIndex])
-                    lastCommand = String(lastLine[lastLinePrefix.endIndex..<lastLine.endIndex])
-                    lastCommand.append("\n")
-                }
-            }
 
-            performCommand()
-        }
+    // MARK: -
+    override var canBecomeFirstResponder: Bool {
         return true
     }
-    
-    // MARK: Notification
+
+    // MARK: - UIKeyInput
+    var hasText: Bool {
+        return true
+    }
+    func insertText(_ text: String) {
+        queue.async(execute: {
+            self.session.channel.write(text, error: nil, timeout: 10)
+        })
+    }
+
+    func deleteBackward() {
+        queue.async {
+            do {
+                try self.session.channel.write(String(bytes: [127], encoding: String.Encoding.ascii))
+            } catch {
+
+            }
+        }
+    }
+
+    // MARK: - Notification
     @objc func keyboardWillShow(notification: NSNotification) {
         let ownFrame = self.view.window!.convert(textView.frame, from: textView.superview)
         if let userInfo = notification.userInfo {
